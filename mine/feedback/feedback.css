@@ -1,0 +1,74 @@
+html {
+  background: #f0f0f0;
+}
+.h5_wrapper .mint-header {
+  background: #2196f3;
+}
+.h5_wrapper .mint-header .mint-header-title {
+  font-weight: normal;
+}
+.h5_wrapper .circle {
+  width: 100vw;
+  box-sizing: border-box;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  align-items: center;
+}
+.h5_wrapper .hasData {
+  flex-flow: column wrap;
+  margin-top: 2rem;
+  align-items: flex-start;
+}
+.h5_wrapper .hasData .fRow {
+  background: #fff;
+  padding: 0rem .75rem;
+  box-sizing: border-box;
+  width: 100%;
+  height: 2.35rem;
+  line-height: 2.35rem;
+}
+.h5_wrapper .hasData .fRow input {
+  margin-bottom: 0;
+  border: none;
+}
+.h5_wrapper .hasData .fRow .mint-cell-wrapper {
+  padding: 0;
+}
+.h5_wrapper .hasData .fRow .mint-field .mint-cell-title {
+  width: auto;
+  color: #333333;
+  font-size: .8rem;
+}
+.h5_wrapper .hasData .fRow .mint-cell:last-child {
+  background-image: none;
+  background-size: 100% 1px;
+}
+.h5_wrapper .hasData .fRow input[type=tel] {
+  border: none;
+}
+.h5_wrapper .hasData .fRow .mint-cell-wrapper {
+  background-image: none;
+}
+.h5_wrapper .hasData .fRow .mint-field.is-textarea .mint-cell-value {
+  padding: .8rem 0;
+}
+.h5_wrapper .hasData .subBtn {
+  height: 2.15rem ;
+  background: #2196f3;
+  color: #fff;
+  border-radius: .2rem ;
+  margin: 0 auto;
+  width: calc(97.5%);
+  font-size: .8rem;
+  text-align: center;
+  line-height: 2.15rem;
+}
+.h5_wrapper .hasData .note {
+  font-size: .65rem ;
+  color: #999;
+  margin: 1rem auto;
+}
+.h5_wrapper .hasData .note span {
+  color: #2196f3;
+}

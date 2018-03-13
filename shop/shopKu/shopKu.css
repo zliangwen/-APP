@@ -1,0 +1,210 @@
+html{
+	height:100%;
+	background:#f0f0f0;
+}
+
+
+.tabBar{
+	width:11.25rem;
+	height:1.5rem;
+	margin:0 auto;
+	border-radius: 1rem;
+	margin-top:0.4rem;
+	display: flex;
+
+}
+ .tabBar_left, .tabBar_right{
+	flex:1;
+	text-align: center;
+	line-height: 1.5rem;
+}
+.active{
+	background:url(../../images/back_fff_left.png) no-repeat;
+	background-size:100%;
+}
+.active_right_fff{
+	background:url(../../images/back_fff_right.png) no-repeat;
+	background-size:100%;
+}
+.active_left{
+	background:#007bdd;
+	border-top-left-radius: 1rem;
+	border-bottom-left-radius:1rem; 
+	color:#fff;
+}
+.active_right{
+	background:#007bdd;
+	border-top-right-radius: 1rem;
+	border-bottom-right-radius:1rem; 
+	color:#fff;
+}
+
+.tabNav{
+	width:100%;
+	height:1.75rem;
+	padding: 0 3%;
+	background:#fff;
+	position: fixed;
+	z-index: 10;
+	border-bottom: 1px solid #e0e0e0;
+
+}
+.tabNav ul{
+	height:100%;
+	display: flex;
+}
+.tabNav ul li{
+	flex:1;
+	height:100%;
+	line-height: 1.75rem;
+	text-align:center;
+}
+.tabNav ul li i{
+	display: block;
+	height:100%;
+	margin:0 auto;
+	font-size: 0.65rem;
+	text-decoration:none;
+}
+
+.a_active{
+	border-bottom:3px solid #ffa800;
+	color:#ffa800;
+}
+.shop_recommend, .recommends_list{
+	background:none;
+	overflow: hidden;
+}
+.shopList{
+	margin-top:2rem;
+	background:#fff;
+
+}
+ .shopList ul li{
+	width:100%;
+	background:#fff;
+	margin-bottom: 0.3rem;
+}
+
+ .shopList ul li .list_top{
+	padding:0.75rem 3%;
+	border-bottom:1px solid #e0e0e0;
+}
+.color_ffa800{
+	color:#ffa800;
+}
+ .shopList ul li .listImgAndName{
+	display: flex;
+	padding:1rem 3%;
+	border-bottom: 1px solid #e0e0e0;
+
+}
+ .shopList ul li .listImgAndName .listImg{
+	flex:1;
+	height:4rem;
+	position: relative;
+}
+ .shopList ul li .listImgAndName .listImg img{
+	width:4rem;
+	height:4rem;
+	position: absolute;
+	top:0;
+	left:0;
+	right:0;
+	bottom:0;
+	margin:auto;
+}
+ .shopList ul li .listImgAndName .listName{
+	flex:2;
+	height:4rem;
+	position: relative;
+}
+
+em{
+    font-size: 0.5rem;
+    font-style: normal;
+    padding-left:.1rem;
+    font-weight: 500;
+}
+ .shopList ul li .listImgAndName .listName .list_num{
+	position: absolute;
+	right:0.75rem;
+	bottom: 0;
+	color:#999
+}
+ .shopList ul li .listImgAndName .listName .list_price{
+	position: absolute;
+	left:0;
+	bottom: 0;
+	color:red;
+}
+ .shopList ul li .listBottom{
+	background:#fff;
+	padding:0.75rem 0;
+}
+.span_color_e0{
+	border:1px solid #666;
+	height:1.35rem;
+	line-height: 1.3rem;
+	color:#666;
+	padding:0 .65rem;
+	border-radius: 1rem;
+	float:right;
+	margin-right:.65rem;
+}
+.span_color_ff{
+	border-color:#ffb542;
+	color:#ffb542
+}
+
+.allNullClass{
+	width: 100%;
+    height: 100%;
+
+    
+}
+
+.allNullClass img{
+	width: 3.7rem;
+    height: auto;
+    margin:50% auto 0;
+   display: block;
+}
+.allNullClass p{
+    width: 100%;
+    height: 2rem;
+    margin-top:1rem;
+   
+}
+.allNullClass button{
+	width:60%;
+	margin-left:20%;
+	height:2rem;
+	background:#2196F3;
+	color:#fff;
+	border:0;
+}
+.popub{
+	width:100%;
+	height:100%;
+	position: fixed;
+	top:0;
+	left:0;
+	background:rgba(00,00,00,0.7);
+	z-index: 100000
+}
+.popub div{
+	width:60%;
+	padding:0.5rem;
+	height:8rem;
+	position: absolute;
+	top:0;
+	left:0;
+	bottom:0;
+	right:0;
+	margin:auto;
+	background:#fff;
+}
+.popub div .p{
+	padding:0.25rem 0;
+}

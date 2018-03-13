@@ -1,0 +1,26 @@
+.margin_center{
+	position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 50%;
+    text-align: center;
+}
+.shop_recommend_list_ol_ol{
+	margin:0;
+	padding:0;
+}
+ ul li{
+	float: left;
+    width:49%;
+    margin:0;
+    padding-bottom: 0.75rem;
+}
+ul li:nth-child(2n){
+	/*padding-left:1%;*/
+}
+ ul li:nth-child(2n+1){
+	/*padding-right:1%;*/
+}

@@ -1,0 +1,52 @@
+html{
+	height:100%;
+	background:#f0f0f0;
+}
+ .marginCenter{
+	position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 50%;
+    text-align: center;
+}
+.address_one{
+	padding:0.5rem 0;
+	border-bottom: 1px solid #f0f0f0;
+}
+
+.text{
+	height:4.25rem;
+	border:0;
+	padding-top:0.75rem;
+}
+.add{
+ 	width:80%;
+ 	height:2.2rem;
+ 	background:#2196f3;
+ 	border:0;
+ 	margin:1.375rem 10%;
+ }
+ .defalut{
+ 	padding:0.75rem 3%;
+ 	background:#fff;
+  	margin-top:0.2rem;
+ }
+  .defalut i{
+  	display: block;
+  	width:0.9rem;
+  	height: 0.9rem;
+  	border-radius: 50%;
+  	border:1px solid #e0e0e0;
+  	margin-right:0.5rem;
+  }
+  .address_one span input{
+        border: 0;
+    float: right;
+    text-align: right;
+    margin-bottom: 0;
+    padding: 0 15px;
+    height: 2rem
+  }

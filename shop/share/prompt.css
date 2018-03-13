@@ -1,0 +1,38 @@
+.h5_wrapper {
+  position: relative;
+}
+.h5_wrapper .header {
+  width: 100%;
+  height: 22.625rem;
+  background: url("../../images/promptbg.png") no-repeat;
+  background-size: 100% 100%;
+}
+.h5_wrapper .content {
+  padding-top: 7.95rem;
+  text-align: center;
+}
+.h5_wrapper .logo {
+  width: 4.025rem;
+  height: 3.55rem;
+  text-align: center;
+  line-height: 3.55rem;
+  margin: 0 auto;
+  background-color: #ccc;
+}
+.content p {
+  margin-top: 3rem;
+  color: #fff;
+  font-size: 28px;
+  font-family: '黑体';
+}
+.h5_wrapper .btn {
+  background-color: #2195f2;
+  color: #fff;
+  width: 15rem;
+  height: 2.7rem;
+  font-size: 18px;
+  text-align: center;
+  line-height: 2.7rem;
+  border-radius: .4rem;
+  margin: 5rem auto;
+}

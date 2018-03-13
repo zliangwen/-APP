@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>选择地址</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../index/shop.css">
+    <link rel="stylesheet" href="addressList.css">
+    <style>
+        .shop_recommend_list ul li .lis_img img[lazy=loading] {
+            width: 40px !important;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak>
+    <!--header-->
+    <header class="clearfix">
+        <!-- <span class="mui-icon mui-icon-back color_fff" @click="goBack"></span> -->
+        <span class="font_size_85 color_fff marginCenter"  v-text="title"></span>
+        <span class="pull-right color_fff Url_href" href="guanliAddress.html?guanli=1" >管理</span>
+    </header>
+    <!--推荐-->
+    <div class="shop_recommend" style="margin-top:2.3rem;">
+        <ul class="clearfix addressUl">
+            <li v-for="item in addressList"  @click="toAddressChoose(item.id)">
+                <div class="addrssTop clearfix">
+                    <div class="addressName color_3">{{item.trueName}}</div>
+                    <div class="addressPhone " style="flex:2">{{item.mobPhone}}</div>
+                </div>
+
+                <div class="address clearfix color_9" style="word-break: break-all; word-wrap:break-word">
+                    <span v-if="item.isDefault == '1'" style="color:#ffa800 ">[已设为默认]</span>
+                    {{item.proviceName+item.cityName+item.areaName+item.address}}
+                </div>
+                
+            </li>
+        </ul>
+    </div>
+     <button class="color_fff font_size_85" @click="sureAdd">添加新地址</button>
+    
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm=new Vue({
+        el:'#app',
+        data:{
+            title:"选择地址",
+            flog:1,
+            listQuery:{
+                pageSize:10,
+                pageId:1,
+            },
+            addressList:[],
+            orderId:"",
+            
+           
+            
+        },
+        created: function () {
+
+        },
+       
+        methods:{ 
+            goBack:function(){
+                window.history.back(-1)
+            },
+            toAddressChoose:function(id){
+                //_g.goBack();
+                androidAndIos();
+                if(_g.GetqueryUrl('count')){
+                    //_g.goBack();
+                    window.location.href="../pickGoods/pickGoods.html?id="+id+"&orderId="+this.orderId+"&isBackShop=1&count="+_g.GetqueryUrl("count")
+                }else{
+                    window.location.href="../pickGoods/pickGoods.html?id="+id+"&orderId="+this.orderId+"&isBackShop=1"
+                }
+                
+            },
+            chooseMoren:function(item){
+                var that = this;
+                if(that.flog == 1){
+                    _g.ajax("/app/memberAddress/updateDefaultMemberAddress",{addressId:item.id},function(res){
+                        console.log(res)
+                        if(res.state == true){
+                            
+                            that.getAddressList();
+                        }
+                    })
+                    that.flog =0
+                }else if(that.flog == 0){
+                    _g.ajax("/app/memberAddress/updateDefaultMemberAddress",{addressId:item.id},function(res){
+                            if(res.state == true){
+                                
+                                that.getAddressList();
+                            }
+                        })
+                     that.flog =1
+                }
+                console.log(item)
+                
+            },
+            //获取用户地址
+            getAddressList:function(){
+                var that = this;
+                _g.ajax("/app/memberAddress/getMemberAddressList",that.listQuery,function(res){
+                    console.log(res)
+                    if(res.state == true){
+                        that.addressList = res.data;
+                    }
+                })
+                that.orderId = _g.GetqueryUrl("orderId")
+                console.log(that.orderId)
+
+            },
+            sureAdd:function(){
+                window.location.href="address.html?indexOr=1"
+                androidAndIos()
+
+            },
+
+            
+        },
+        mounted: function () {
+            this.getAddressList();
+            console.log(_g.GetqueryUrl("orderId"))
+        },
+        
+
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>个人信息</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black">
+		<meta name = "format-detection" content = "telephone=no">
+		<script src="../../js/flex_rem.js"></script>
+		<link rel="stylesheet" href="../../css/mui.min.css">
+		<link rel="stylesheet" href="../../css/mint.css">
+		<link rel="stylesheet" href="../../css/reset.css">
+		<link rel="stylesheet" href="../../css/mui.picker.css">
+		<link rel="stylesheet" href="../../css/mui.poppicker.css">
+		<link rel="stylesheet" href="userInfo.css">
+	</head>
+<body>
+	<!--页面主结构开始-->
+	<div id="app">
+	<div id="settings" class="mui-views h5_wrapper">
+		<div class="mui-view">
+			<div class="mui-navbar">
+			</div>
+			<div class="mui-pages">
+			</div>
+		</div>
+	</div>
+	<!--页面主结构结束-->
+	<!--单页面开始-->
+	<div id="setting" class="mui-page">
+		<!--页面标题栏开始-->
+		<div class="mui-navbar-inner mui-bar mui-bar-nav">
+			<span class="mui-icon mui-icon-back color_fff pull-left" @click="goBack"></span>
+			<span class="font_size_85 color_fff margin_center">个人信息</span>
+		</div>
+		<!--页面标题栏结束-->
+		<!--页面主内容区开始-->
+		<div class="mui-page-content">
+			<div class="mui-scroll-wrapper">
+					<ul class="mui-table-view mui-table-view-chevron">
+						<li class="mui-table-view-cell">
+							<a  class="mui-navigate-right">头像
+								<img @click="sheetVisible1=true" class="mui-media-object mui-pull-right head-img" id="head-img" :src="userHeadPortrait">
+							</a>
+						</li>
+					</ul>
+					<ul class="mui-table-view mui-table-view-chevron">
+						<li class="mui-table-view-cell">
+							<a class="mui-navigate-right">昵称 <i class="mui-pull-right update" @click="changeName">{{uerName |name}}</i></a>
+						</li>
+					</ul>
+					<ul class="mui-table-view mui-table-view-chevron">
+						<li class="mui-table-view-cell">
+							<a  class="">手机号 <i class="mui-pull-right update" style="margin-right: 30px">{{userPhone}}</i></a>
+						</li>
+					</ul>
+					<ul class="mui-table-view mui-table-view-chevron">
+						<li class="mui-table-view-cell">
+							<a  class="mui-navigate-right">性别<i class="mui-pull-right update" @click="sheetVisible2=true">{{userSex | sexs}}</i></a>
+						</li>
+						<li class="mui-table-view-cell">
+							<a  class="mui-navigate-right">年龄<i class="mui-pull-right update" id="showUserPicker">{{userAge |name}}</i></a>
+						</li>
+					</ul>
+					<ul class="mui-table-view mui-table-view-chevron clearfix">
+						<li class="mui-table-view-cell">
+							<a href="#privacy" class="mui-navigate-right">简介<i class="mui-pull-right update">{{texValue | textfiler}}</i></a>
+						</li>
+					</ul>
+			</div>
+		</div>
+		<!--页面主内容区结束-->
+	</div>
+	<!--单页面结束-->
+		<div id="privacy" class="mui-page">
+			<div class="mui-navbar-inner mui-bar mui-bar-nav">
+				<span class="mui-icon mui-icon-back color_fff pull-left mui-action-back" ></span>
+				<span class="font_size_85 color_fff margin_center">简介</span>
+			</div>
+			<div class="mui-page-content">
+				<textarea id="question" maxlength="30" class="mui-input-clear question" placeholder="请输入您的简介..." v-model="userIntroduction"></textarea>
+				<p v-show="userIntroduction.length==30" style="text-align: right;margin:0.5rem 3%;color: #f00;">不能超过30个字符</p>
+				<mt-button type="primary" @click="saveText">保存</mt-button>
+			</div>
+		</div>
+		<mt-actionsheet
+				:actions="action1"
+				v-model="sheetVisible1">
+		</mt-actionsheet>
+		<mt-actionsheet
+				:actions="action2"
+				v-model="sheetVisible2">
+		</mt-actionsheet>
+	</div>
+</body>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/mui.view.js "></script>
+<script src="../../js/mui.picker.min.js "></script>
+<script src="../../js/mui.poppicker.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+	//初始化单页view
+	var Vm=new Vue({
+		el:'#app',
+		data:{
+			action1:[
+				{
+					name:'拍照',
+					method: function () {
+						_g.takePhoto()
+					}
+				},
+				{
+					name:'从相册中选择',
+					method:function () {
+						setTimeout(function () {
+							Vm.fileUpload()
+						},1000)
+					}
+				},
+			],
+			sheetVisible1:false,
+			action2:[
+				{
+					name:'男',
+					method: function () {
+						Vm.changeSex('01')
+					}
+				},
+				{
+					name:'女',
+					method:function () {
+						Vm.changeSex('02')
+					}
+				},
+			],
+			sheetVisible2:false,
+			userSex:'',
+			uerName:'',
+			texover:false,
+			texValue:'',
+			userAge:'',
+			userHeadPortrait:'../../images/userALL.png',
+			userIntroduction:'',
+			userPhone:'',
+			savfsa:false
+		},
+		methods:{
+			fileUpload: function () {
+				_g.pickPhoto()
+			},
+			takePhoto: function () {
+				_g.takePhoto()
+			},
+			goBack: function () {
+				_g.goBack()
+			},
+			changeName: function () {  //修改昵称
+				var that=this
+				mui.prompt('','不能超过12个字符','请输入昵称',['取消','确定'], function (obj) {
+					if(obj.index==1){
+						var sival=/^[0-9a-zA-Z\u4e00-\u9fa5_]{0,16}$/;
+						if(obj.value==''|| obj.value.trim()==''){
+							that.$toast({
+								message:'不能为空',
+								position: 'bottom',
+							})
+							return false
+						}
+						if(!sival.test(obj.value)){
+							that.$toast({
+								message:'请输入正确的昵称(中英文，数字,下划线)',
+								position: 'bottom',
+							})
+							return false
+						}
+						_g.ajax('/app/user/updateNickName',{nickName:obj.value},function(res){
+							if(res.state){
+								that.uerName=obj.value
+								that.$toast({
+									message:res.msg,
+									position: 'middle',
+								})
+							}
+							else{
+								that.$toast({
+									message:res.msg,
+									position: 'bottom',
+								})
+							}
+						})
+					}
+				})
+			},
+			saveText: function () {//保存
+				var that=this
+				if(that.userIntroduction.length>=30){
+					that.savfsa=true
+					return false
+				}
+				_g.ajax('/app/user/updateIntroduction',{userIntroduction:that.userIntroduction},function(res){
+					console.log(res)
+					if(res.state){
+						that.$toast({
+							message:res.msg,
+							position: 'middle',
+						})
+						that.savfsa=false
+						that.texValue=that.userIntroduction
+						viewApi.back();
+					}
+					else{
+						that.$toast({
+							message:res.msg,
+							position: 'bottom',
+						})
+						that.savfsa=false
+					}
+				})
+
+		 	},
+			ajaxList: function () { //初始化
+				var that=this;
+				_g.ajax('/app/user/userDetails',{
+				},function(res){
+					console.log(res)
+					if(res.state){
+						res.data.dataList[0].userHeadPortrait?that.userHeadPortrait=res.data.dataList[0].userHeadPortrait:''
+						that.uerName=res.data.dataList[0].userNickName
+						that.userSex=res.data.dataList[0].userSex
+						that.userAge=res.data.dataList[0].userAge
+						that.texValue=res.data.dataList[0].userIntroduction
+						that.userPhone=res.data.dataList[0].userPhone
+						if(res.data.dataList[0].userIntroduction){
+							that.userIntroduction=res.data.dataList[0].userIntroduction
+						}
+					}
+					else{
+						that.$toast({
+							message:res.msg,
+							position: 'bottom',
+						})
+					}
+				},true,false)
+			},
+			changeSex: function (name) {  //修改性别
+				var that=this
+				_g.ajax('/app/user/updateSex',{userSex:name},function(res){
+					if(res.state){
+						that.userSex=name
+						that.$toast({
+							message:res.msg,
+							position: 'middle',
+						})
+					}
+					else{
+						that.$toast({
+							message:res.msg,
+							position: 'bottom',
+						})
+					}
+				})
+			},
+
+		},
+		mounted: function () {
+			var that=this;
+			that.ajaxList()
+			$(function () {
+				//textare
+				var setda=[];
+				for(var i=1;i<100;i++){
+					setda.push(i)
+				}
+				var textarea = document.getElementsByTagName('textarea')[0];
+				textarea.oninput = function() {
+					this.value = this.value.substring(0, 30);
+					that.texValue=this.value
+				}
+				var userPicker = new mui.PopPicker();
+				userPicker.setData(setda);
+				var showUserPickerButton = document.getElementById('showUserPicker');;
+				showUserPickerButton.addEventListener('tap', function(event) {
+					userPicker.show(function(items) {
+						_g.ajax('/app/user/updateAge',{userAge:items[0]},function(res){
+							if(res.state){
+								that.userAge = items[0]
+								that.$toast({
+									message:res.msg,
+									position: 'middle',
+								})
+							}
+							else{
+								that.$toast({
+									message:res.msg,
+									position: 'bottom',
+								})
+							}
+						})
+
+					});
+				}, false);
+			})
+
+		},filters:{
+			textfiler: function (value) {
+				if(!value){
+					return '请填写'
+				}
+				else if(value.length>6){
+					return value.substring(0,6)+'...'
+				}
+				else{
+					return value.substring(0,6)
+				}
+			},
+			age: function (value) {
+				var nowyear=new Date().getFullYear();
+				if(!isNaN(value)){
+					return (nowyear-value)
+				}
+				else{
+					return value
+				}
+			},
+			sexs: function (value) {
+				if(value==01){
+					return '男'
+				}
+				else if(value==02) {
+					return '女'
+				}
+				else{
+					return '请填写'
+				}
+			},
+			name: function (value) {
+				if(value){
+					return value
+				}
+				else{
+					return '请填写'
+				}
+			}
+		}
+	})
+	var viewApi = mui('#settings').view({
+		defaultPage: '#setting'
+	});
+	(function($) {
+		//处理view的后退与webview后退
+		var oldBack = $.back;
+		$.back = function() {
+			if (viewApi.canBack()) { //如果view可以后退，则执行view的后退
+				viewApi.back();
+			} else { //执行webview后退
+				oldBack();
+			}
+		};
+	})(mui);
+	// 文件上传完成，回调
+	function transFileBack(data){
+		console.log(data)
+		uploadEnd(data);
+	}
+	//回调填充
+	function uploadEnd(data){
+		console.log(data)
+		_g.ajax("/app/user/updateHeadPortrait",{headPortrait:data},function(res){
+			console.log(res)
+			if(res.state){
+				mui.toast('头像设置成功')
+				Vm.$data.userHeadPortrait=data;
+			}
+			else{
+				mui.toast(res.meg)
+			}
+		})
+	}
+	String.prototype.trim=function(){
+		return this.replace(/(^\s*)|(\s*$)/g, "");
+
+	}
+</script>
+</html>

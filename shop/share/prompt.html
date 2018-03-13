@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>蛙影</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+  <meta name="apple-mobile-web-app-capable" content="yes"/>
+  <script src="../../js/flex_rem.js"></script>
+  <link rel="stylesheet" href="../../css/reset.css">
+  <link rel="stylesheet" href="../../css/mui.min.css">
+  <link rel="stylesheet" href="../../css/mint.css">
+  <link rel="stylesheet" href="../index/shop.css">
+  <link rel="stylesheet" href="prompt.css">
+</head>
+<body>
+  <div class="h5_wrapper" id="app" v-cloak>
+    <div class="header">
+      <div class="content">
+        <div class="logo">LOGO</div>
+        <p>蛙影APP正式上线</p>
+      </div>
+    </div>
+    <div class="btn" @click="loadMus">立即打开</div>
+  </div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+  var Vm = new Vue({
+    el: '#app',
+    data: {
+      UserInvitationCode:''
+    },
+    methods: {
+      loadMus: function () {
+        var that = this;
+        var ids=_g.GetqueryUrl("id")
+        var types=_g.GetqueryUrl("type")
+        var isAndroid = !!navigator.userAgent.match(/android/ig),
+                isIos = !!navigator.userAgent.match(/iphone|ipod/ig),
+                isIpad = !!navigator.userAgent.match(/ipad/ig),
+                isWeixin = (/MicroMessenger/ig).test(navigator.userAgent),
+                isQQ = (/qq/ig).test(navigator.userAgent);
+        if (isAndroid) {
+          if (isWeixin) { //andorid微信和QQ走微下载
+            window.location = 'waying://massmedia.xiaolang.com/?type='+types+'&id='+ids;
+            alert('点击右上角选择在浏览器中打开')
+          } else {
+            window.location = 'waying://massmedia.xiaolang.com/?type='+types+'&id='+ids;//android app协议
+            console.log('waying://massmedia.xiaolang.com/?type='+types+'&id='+ids)
+            window.setTimeout(function() {
+              that.$messagebox.confirm("是否下载APP?").then(function(act){
+                window.location.href = "https://www.baidu.com";//android 下载地址
+              })
+            }, 4000)
+          }
+        }
+        else{
+          if (isWeixin) { //andorid微信和QQ走微下载
+            window.location.href = 'waying://massmedia.xiaolang.com/startapp';
+            alert('点击右上角选择在浏览器中打开')
+          } else {
+            window.location = "waying://massmedia.xiaolang.com/startapp";//ios app协议
+            window.setTimeout(function() {
+              that.$messagebox.confirm("是否下载APP?").then(function(act){
+                window.location.href = "https://www.apple.com/itunes/";//ios 下载地址
+              })
+            }, 4000)
+          }
+        }
+      }
+    },
+    mounted: function () {
+
+    }
+  })
+</script>
+</body>
+</html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>查看物流</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../index/shop.css">
+    <link rel="stylesheet" href="logistics.css">
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak>
+    <!--header-->
+    <header class="clearfix">
+        <span class="mui-icon mui-icon-back color_fff" @click="goBack"></span>
+        <span class="font_size_85 color_fff marginCenter"  v-text="title"></span>
+    </header>
+    <!--推荐-->
+    <div class="shop_recommend" style="margin-top:2.3rem;" v-if="show">
+        <div class="goodsList clearfix">
+            <div class="pull-left goodsImg">
+              <img :src="dataList.imageShowUrl"/>
+              <span>共{{dataList.goodsNum}}件商品</span>
+            </div>
+            <div class="pull-left" style="padding-left:0.75rem;">
+              <p class="font_size_75" style="color:#ffa800">{{dataList.shippingDesc}}</p>
+              <p class="font_size_6 color_9" style="padding-top:.6rem;">{{dataList.shippingName + dataList.shippingCode}}</p>
+            </div>
+        </div>
+        <div style="padding:0.5rem 2%;border-bottom: 0.3rem solid #f0f0f0">
+            <p>收货人：{{dataList.userName}}</p>
+            <p>联系方式：{{dataList.phone}}</p>
+            <p>收货地址：{{dataList.address}}</p>
+          </div>
+        <div class="clearfix details" style="margin-top:2%">
+
+          <ul class="clearfix">
+            <li v-for="(item,index) in dataList.shiplist" class="clearfix " :class="{active:index==0}">
+              <div class="pull-left border_right" style="width:20%;padding-right:5%" >
+                  <div>{{item.time | stringFixed}}</div>
+                  <div>{{item.time | stringFixedTime}}</div>
+                  <span class="span_c" :class="{span_active:index == 0}"></span>
+              </div>
+              <div class="pull-left" style="width:80%;padding-left:10%">
+                <div class="font_size_65" :class="{active:index==0}">{{item.context}}</div>
+                
+              </div>
+            </li>
+          </ul>
+        </div>
+    </div>
+    
+   <button class="color_fff font_size_85" @click="sureGoods" v-if="show">确认收货</button>
+    
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm=new Vue({
+        el:'#app',
+        data:{
+            title:"查看物流",
+            dataList:{},
+            text:"收货完成",
+            show:false,
+            count:""
+        },
+        created: function () {
+
+        },
+        methods:{ 
+            goBack:function(){
+              _g.goBack()
+            },
+            sureGoods:function(){
+              var that = this;
+                that.$messagebox.confirm("是否确认收货?","提示").then(function(action){
+                    that.$indicator.open({
+                        text:'请稍等~',
+                        spinnerType: 'fading-circle'
+                    });
+                    setTimeout(function(){
+                        _g.ajax("/app/orderSubmit/confirmReceipt",{orderId:_g.GetqueryUrl("id")},function(res){
+                            console.log(res)
+                            if(res.state == true){
+                                that.$toast(res.msg)
+                                    //window.location.href="../orderPay/orderPay.html?type="+that.EncodeURI(that.text)+"&name="+that.EncodeURI(that.text);
+                                    androidAndIos()
+                                      //window.history.back(-1)
+                                      //_g.goBack()
+                            
+                                    
+                            }else{
+
+                            }
+                        })
+                    },3000)
+                    
+                }).catch(function(){
+
+                })
+            },
+            getWuliuInfo:function(){
+               var that = this;
+               that.count=_g.GetqueryUrl("count")
+               console.log(that.count)
+               that.$indicator.open({
+                        text:'请稍等~',
+                        spinnerType: 'fading-circle'
+                    });
+               _g.ajax("/app/orderSubmit/getSendInfomation",{orderId:_g.GetqueryUrl("id")},function(res){
+                    console.log(res)
+                    if(res.state == true){
+                        that.dataList = res.data
+                        that.show = true
+                    }
+                })
+                
+              
+            },
+            EncodeURI:function(name){    //中文转义
+                return encodeURI(encodeURI(name))
+            },
+
+        },
+        mounted: function () {
+           this.getWuliuInfo();
+        },
+        filters:{
+          stringFixed:function(val){
+            return val.substring(5,10)
+          },
+          stringFixedTime:function(val){
+            return val.substring(11,16)
+          }
+        }
+
+    })
+</script>
+</body>
+</html>

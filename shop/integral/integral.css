@@ -1,0 +1,105 @@
+.integral_top{
+    background: url("../../images/shop_jifencz.png") no-repeat center;
+    background-size: 100% 9.575rem;
+    width: 100%;
+    height: 9.575rem;
+    text-align: center;
+    color: #fff;
+}
+html,body{height: 100%;width: 100%;}
+.integral_top p{
+    padding-top: 4rem;
+    font-size: 0.8rem;
+    color: #fff;
+}
+.integral_top span{
+    color: #fff;
+    font-size:1.4rem;
+    display: inline-block;
+    padding-top: 0.8rem;
+    font-weight: 600;
+}
+.h5_wrapper .integral{
+    background: #fff;
+}
+.h5_wrapper .integral_center{
+    margin:0.8rem 3%;
+    padding-bottom: 0.5rem;
+}
+.h5_wrapper .integral_center p{
+    font-size: 0.8rem;
+    color: #333333;
+    margin-bottom: 0.8rem;
+}
+.h5_wrapper .integral_center li{
+    width: 31.333%;
+    margin:0.6rem 1%;
+    background: #EEEEEE;
+    text-align: center;
+    color: #999999;
+    float: left;
+    height: 1.75rem;
+    line-height: 1.75rem;
+    border-radius: 0.8rem;
+    font-size: 15px
+}
+.h5_wrapper .integral_center li.active{
+    background: #FFA800;
+    color: #fff;
+}
+.h5_wrapper .integral_center input{
+    border-radius: 0.8rem;
+    border:1px solid rgba(0,0,0,.1);
+    margin: 0.5rem auto;
+    
+}
+.h5_wrapper .user_Agree{
+    margin: 0rem 3%;
+    height: 1.5rem;
+    line-height: 1.5rem;
+}
+.h5_wrapper .user_Agree img{
+    width: 0.8rem;
+    height: auto;
+    margin-right: 0.3rem;
+    margin-top: 0.35rem;
+}
+.h5_wrapper .user_Agree a{
+    color: #2196F3;
+}
+.h5_wrapper footer{
+    position:fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2.6rem;
+    line-height: 2.6rem;
+    background: #fff;
+    border-top: 1px solid #E0E0E0;
+}
+.h5_wrapper footer .footer_left_div{
+    width: 62%;
+    text-align: right;
+    padding-right: 1rem;
+
+}
+.h5_wrapper footer .footer_left_div p{
+    font-size: 0.7rem;
+}
+.h5_wrapper footer .footer_left_div p span{
+    font-size: 0.85rem;
+    color: #F13030;
+}
+.h5_wrapper footer .footer_right_div{
+    width: 38%;
+    background: #c0c0c0;
+    color: #fff;
+    font-size: 0.85rem;
+    text-align: center;
+}
+.mui-checkbox input[type=checkbox], .mui-radio input[type=radio]{
+    top: 2px;
+}
+.h5_wrapper footer .footer_right_div.active{
+    background:rgba(33, 150, 243,1);
+}

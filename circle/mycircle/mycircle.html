@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我关注的圈子</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../../mine/follow/follow.css">
+    <link rel="stylesheet" href="../selected/selected.css">
+    <style>
+        .h5_wrapper .hasData .unit .right .focus .mint-button{
+            background: #e0e0e0;
+        }
+    </style>
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak style="height: 100%">
+    <mt-header title="我关注的圈子" fixed>
+        <span slot="left">
+            <mt-button icon="back" @click="goBack"></mt-button>
+        </span>
+    </mt-header>
+    <div class="circle" v-if="circleId==1" style="height:100%;">
+        <span class="color_9">精选推荐还没有数据^-^</span>
+    </div>
+    <div class="circle hasData" v-else>
+        <div style="width: 100%;">
+            <ul class="clearfix" v-infinite-scroll="loadMore"
+                infinite-scroll-disabled="loading"
+                infinite-scroll-distance="10">
+                <div class="unit" v-for="(item,index) in items">
+                    <div class="left"  @click="jumpToCircleDetail(item)">
+                        <div class="photo" >
+                            <img v-if="item.circleImage" :src="item.circleImage" alt="" class="img-responsive">
+                            <img v-else="item.userHeadPortrait" src="../../images/userALL.png" alt="" class="img-responsive">
+                        </div>
+                        <div class="txt">
+                            <div class="title fzs-ellipsis">{{item.circleName}}</div>
+                            <div class="note color_9"><span style="margin-right: .61rem" class="span2"><i>{{item.attentionNum |jifen}}</i>关注</span><span>帖子{{item.postsNum |jifen}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="right">
+                        <div class="focus">
+                            <mt-button  size="small" @click="follow(item,index,$event)">
+                                <label class="focusf" pand="1">已关注</label>
+                                <!--<label class="focusf" pand="0" v-else >关注</label>-->
+                            </mt-button>
+                        </div>
+                    </div>
+                </div>
+                <footer v-if="footershow" style="padding-top: 5px">
+                    <p>没有更多了~</p>
+                </footer>
+            </ul>
+            <div v-if="loading" style="background: #fff;height: 40px">
+                <mt-spinner type="double-bounce" color="#2196F3"></mt-spinner>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm = new Vue({
+        el: '#app',
+        data: {
+            circleId: 0,
+            loading: false,
+            items: [],
+            footershow:false,
+            pageId:1,
+            pageSize:10,
+            startLoaing:false,
+        },
+        methods: {
+            goBack:function(){
+                _g.goBack();
+            },
+            follow: function (item,index,e) {
+                var that = this;
+                console.log($(e.target).parent().parent().parent().find('.left').find('span').text())
+                var dataNum=null
+                if($(e.target).find('.focusf').attr('pand')=='0'){
+                    dataNum='01'
+                }
+                else{
+                    dataNum='02'
+                }
+                var texr=parseInt($(e.target).parent().parent().siblings('.left').find('.span2 i').text())
+                _g.ajax("/app/h5/circle/attention",{attentionUserId:item.id,attentionEnable:dataNum},function(res){
+                    if(res.state){
+                        if(dataNum=='02'){
+                            $(e.target).find('.focusf').attr('pand','0')
+                            $(e.target).css({"background":'#FFA800'})
+                            $(e.target).find('.focusf').text('关注')
+                            $(e.target).parent().parent().siblings('.left').find('.span2 i').text(texr-1)
+                        }
+                        else{
+                            $(e.target).parent().parent().siblings('.left').find('.span2 i').text(texr+1)
+                            $(e.target).find('.focusf').attr('pand','1')
+                            $(e.target).css({"background":'#E0E0E0'})
+                            $(e.target).find('.focusf').text('已关注')
+
+                        }
+                    }
+                    else{
+                        that.$toast({
+                            message:res.msg,
+                            position:"bottom"
+                        })
+                    }
+                },true)
+            },
+            initData: function () {
+                var that = this
+                var data = {
+                    type:2,
+                    pageSize:that.pageSize,
+                    pageId:that.pageId,
+                }
+                _g.ajax('/app/h5/circle/myList',data, function (res) {
+                    if(res.state){
+                        if(res.data.result.length<that.pageSize){
+                            that.items = that.items.concat(res.data.result)
+                            that.footershow=true
+                            that.startLoaing=false
+                            that.loading = false;
+                        }
+                       else if(res.data.result.length == that.pageSize){
+                            that.items = that.items.concat(res.data.result)
+                            that.loading = false;
+                            that.startLoaing=true
+                        }
+                        else{
+                            that.footershow=true
+                            that.startLoaing=false
+                            that.loading = false;
+                        }
+                    }
+                    else{
+                        that.loading = false;
+                        that.startLoaing=true
+                        that.$toast({
+                            message:res.msg,
+                            position: 'bottom',
+                        })
+                    }
+                },true)
+            },
+            jumpToCircleDetail: function (item) {
+                _g.jumpToCircleDetail(item.id)
+                console.log(item)
+            },
+            loadMore:function() {
+                var that=this
+                if(that.startLoaing){
+                    that.loading = true;
+                    that.pageId++
+                    setTimeout(function () {
+                        that.initData()
+                    },1000)
+                }
+            },
+        },
+        filters:{
+            jifen: function (value) {
+                if(parseFloat(value).toFixed(0).toString().length>5){
+                    return (parseInt(value)/10000).toFixed(0)+'万'
+                }
+                return parseFloat(value).toFixed(0)
+            }
+        },
+        mounted: function () {
+            this.initData()
+        }
+    })
+
+</script>
+</body>
+</html>

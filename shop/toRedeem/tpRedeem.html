@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>兑换积分</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../shop.css">
+    <link rel="stylesheet" href="../spellGroup/spellGroup.css">
+    <link rel="stylesheet" href="toRedeem.css">
+    <style>
+        .shop_recommend_list ul li .lis_img img[lazy=loading] {
+            width: 40px !important;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak>
+    <!--header-->
+    <header class="clearfix">
+        <span class="mui-icon mui-icon-back color_fff" @click="goBack"></span>
+        <span class="font_size_85 color_fff margin_center"  v-text="title"></span>
+    </header>
+    <!--推荐-->
+    <div class="shop_recommend" style="margin-top:2.3rem;padding:0 3%">
+        <div class="shop_recommend_list shop_recommend_list_ol shopCar_list1">
+            <ul class="clearfix oul">
+               <li v-for="item in recommends">
+                   <div class="imgList">
+                       <img :src="item.imgurl"/>
+                   </div>
+                   <div class="list_name">
+                       <div class="color_3 font_size_7 fzs-ellipsis">{{item.content}}</div>
+                       <div class="color_9 font_size_5" style="padding-top:0.75rem">{{item.specInfo}}</div>
+                       <div class="color_9" style="text-align: right">x{{item.num}}</div>
+                       <div class="color_red list_price">{{item.price}}<em>积分</em></div>
+                   </div>
+               </li>
+            </ul>
+            
+        </div>
+    </div>
+    <div class="length">
+        <span class="pull-left">可兑换</span>
+        <span class="color_red">{{redeem}}<em>积分</em></span>
+    </div>
+   <button class="color_fff font_size_85" @click="sureRedeem">确认兑换</button>
+    
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm=new Vue({
+        el:'#app',
+        data:{
+            title:"兑换积分",
+            redeem:null,
+            recommends:[
+                    {
+                    id:'1',
+                    imgurl:'../../images/shop_menu_tuijian@2x.png',
+                    content:'富光真空杯保温水杯 ',
+                    price:'1',
+                    specInfo:"绿色",
+                    endtime:"2018/1/19 12:00:00",
+                    num:1,
+                    checked:false,
+                },
+                {
+                    id:'2',
+                    imgurl:'../../images/shop_menu_tuijian@2x.png',
+                    content:'富光真空杯不锈钢弹盖保温水杯 粉色300ml',
+                    price:'9',
+                    specInfo:"绿色",
+                    endtime:"2018/1/20 14:00:00",
+                    num:1,
+                    checked:false,
+                }
+            ],
+            
+           
+            
+        },
+        created: function () {
+
+        },
+       
+        methods:{ 
+            goBack:function(){
+                window.history.back(-1)
+            },
+            sureRedeem:function(){
+               
+            },
+        },
+        mounted: function () {
+            var that = this;
+           for(var i=0;i<that.recommends.length;i++){
+                that.redeem += that.recommends[i].price * that.recommends[i].num
+           }
+        },
+        
+
+    })
+</script>
+</body>
+</html>

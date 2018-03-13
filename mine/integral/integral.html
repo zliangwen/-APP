@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>积分</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name = "format-detection" content = "telephone=no">
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="integral.css">
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak style="height: 100%">
+    <!--头部-->
+    <mt-header title="我的积分" fixed>
+        <span slot="left">
+            <mt-button icon="back" @click="goBack()"></mt-button>
+        </span>
+        <mt-button icon="tips" slot="right" >
+            <img src="../../images/tip@2x.png" alt=""style="width: .8rem;height: .8rem;" class="Url_href" href="../note/note.html">
+        </mt-button>
+    </mt-header>
+    <div class="integral">
+        <div class="integral_top">
+            <p>我的积分</p>
+            <span>{{userIntegral}}</span>
+        </div>
+        <div class="integral_center">
+            <ul class="menu">
+                <li class="pull-left" v-for="(item,index) in menu" @click="current(index)"><span :class="{active:item.isActive}">{{item.name}}</span></li>
+            </ul>
+            <ul class="clearfix" v-infinite-scroll="loadMore"
+                infinite-scroll-disabled="loading"
+                infinite-scroll-immediate-check="false"
+                infinite-scroll-distance="10">
+                <ul class="unit" v-show="onoff">
+                    <li v-for="(outItem,outIndex) in dataList">
+                    <span class="left">
+                        <span class="up">{{outItem.integralTypeStr}}</span>
+                        <span class="down">{{outItem.createDate}}</span>
+                    </span>
+                        <span class="right">+{{outItem.integralNum | priceNum}}</span>
+                    </li>
+                    <footer v-if="footershow1">
+                        <p>没有更多了~</p>
+                    </footer>
+                </ul>
+                <ul class="unit" v-show="!onoff">
+                    <li v-for="(outItem,outIndex) in dataList1">
+                    <span class="left">
+                        <span class="up">{{outItem.integralTypeStr}}</span>
+                        <span class="down">{{outItem.createDate}}</span>
+                    </span>
+                        <span class="right">-{{outItem.integralNum | priceNum}}</span>
+                    </li>
+                    <footer v-if="footershow2">
+                        <p>没有更多了~</p>
+                    </footer>
+                </ul>
+            </ul>
+            <div v-if="loading" style="background: #fff;height: 40px">
+                <mt-spinner type="double-bounce" color="#2196F3"></mt-spinner>
+            </div>
+
+        </div>
+    </div>
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm = new Vue({
+        el: '#app',
+        data: {
+            menu: [
+                {
+                    isActive: true,
+                    name: '收入明细'
+                },
+                {
+                    isActive: false,
+                    name: '支出明细'
+                }
+            ],
+            userIntegral:'',
+            outId:'01',
+            pageSize:10,
+            pageId: 1,
+            pageIds:1,
+            dataList: [],
+            dataList1: [],
+            loading:false,
+            footershow1:false,
+            footershow2:false,
+            startLoaing:false,
+            startLoaing2:false,
+            onoff:true
+        },
+        methods: {
+            current:function(index){
+                var that=this;
+                for (var i = 0; i < that.menu.length; i++) {
+                    that.menu[i].isActive = false
+                }
+                that.menu[index].isActive = true
+                that.startLoaing=true
+                if(index ==0){
+                    that.onoff=true
+                    if(that.footershow1){
+                        that.startLoaing=false
+                    }
+                }
+                else{
+                    that.onoff=false
+                    if(that.footershow2){
+                        that.startLoaing=false
+                    }
+                }
+            },
+            initIntegral:function(){
+                var that=this
+                _g.ajax('/app/user/myIntegralList',{
+                    integralFlag:'01',
+                    pageId:that.pageId,
+                    pageSize:that.pageSize
+                },function(res){
+                    if(res.state){
+                        if(res.data.dataList.length <that.pageSize){
+                            that.dataList = that.dataList.concat(res.data.dataList)
+                            that.loading = false;
+                            that.startLoaing=false;
+                            that.footershow1=true
+                        }
+                        else if(res.data.dataList.length ==that.pageSize){
+                            that.dataList = that.dataList.concat(res.data.dataList)
+                            that.loading = false;
+                            that.startLoaing=true;
+                            that.footershow1=false
+                        }
+                        else{
+                            that.footershow1=true
+                            that.startLoaing=false
+                            that.loading = false;
+                        }
+                    }
+                    else{
+                        that.loading = false;
+                        that.startLoaing=true
+                        that.$toast({
+                            message:res.msg,
+                            position: 'bottom',
+                        })
+                    }
+                },true)
+            },
+            initIntegral1:function(){
+                var that=this
+                _g.ajax('/app/user/myIntegralList',{
+                    integralFlag:'02',
+                    pageId:that.pageIds,
+                    pageSize:that.pageSize
+                },function(res){
+                    if(res.state){
+                        if(res.data.dataList.length <that.pageSize){
+                            that.dataList1 = that.dataList1.concat(res.data.dataList)
+                            that.loading = false;
+                            that.startLoaing2=false;
+                            that.footershow2=true
+                        }
+                        else if(res.data.dataList.length ==that.pageSize){
+                            that.dataList1 = that.dataList1.concat(res.data.dataList)
+                            that.loading = false;
+                            that.startLoaing2=true;
+                            that.footershow2=false
+                        }
+                        else{
+                            that.footershow2=true
+                            that.startLoaing2=false
+                            that.loading = false;
+                        }
+                    }
+                    else{
+                        that.loading = false;
+                        that.startLoaing2=true
+                        that.$toast({
+                            message:res.msg,
+                            position: 'bottom',
+                        })
+                    }
+                },true)
+            },
+            ajaxList:function(){
+                var that=this
+                _g.ajax('/app/user/userHome',{},function(res){
+                    if(res.state){
+                        that.userIntegral=res.data.dataList[0].userIntegral
+                    }
+                    else{
+                        that.$toast({
+                            message:res.msg,
+                            position: 'bottom',
+                        })
+                    }
+                },true)
+            },
+            loadMore:function() {
+                var that=this
+                if(that.startLoaing && that.onoff){
+                    that.loading = true;
+                    setTimeout(function () {
+                        that.pageId++
+                        that.initIntegral()
+                    },500);
+                }
+                if(that.startLoaing2 && !that.onoff){
+                    that.loading = true;
+                    setTimeout(function () {
+                        that.pageIds++
+                        that.initIntegral1()
+                    },500);
+                }
+            },
+            goBack: function () {
+                _g.goBack()
+            }
+        },
+        mounted: function () {
+            this.initIntegral()
+            this.initIntegral1()
+            this.ajaxList()
+            var sheight = $(".integral_top").height();
+            $('.h5_wrapper .mint-header').css({
+                "background":"rgba(38, 162, 255,0)",
+            })
+            $(document).scroll(function(){
+                var stop = $("body").scrollTop();//滚动条距离顶部的距离
+                var bgcolor=stop/sheight;
+                $('.h5_wrapper .mint-header').css({
+                    "background":"rgba(38, 162, 255,"+bgcolor+")"
+                })
+            });
+        },
+        filters:{
+            priceNum: function (val) {
+                if(parseFloat(val).toFixed(0).toString().length>7){
+                    return (parseInt(val)/100000).toFixed(2)+'万'
+                }
+                return val
+            }
+        }
+    })
+</script>
+</body>
+</html>

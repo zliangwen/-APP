@@ -1,0 +1,414 @@
+.shop_hea_img_left{
+    position: absolute;
+    top: 0.65rem;
+    left:2%;
+    width: 1.2rem;
+    height: auto;
+}
+.h5_wrapper header{
+    width: 100%;
+    position: fixed;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    height: 2.3rem;
+    padding:0 2%;
+    line-height:2.3rem;
+    background: #2196F3;
+    z-index: 99999;
+}
+.h5_wrapper .shop_header_menu{
+    position: absolute;
+    top: 2.3rem;
+    left: 0px;
+    right: 0px;
+    width: 100%;
+    z-index: 999;
+    background: #FFFFFF;
+}
+.h5_wrapper .shop_header_menu ul{
+    margin:0.5rem 2%
+}
+.h5_wrapper .shop_header_menu ul li{
+    float: left;
+    width: 23%;
+    background: #F4F4F4;
+    color: #333333;
+    font-size: 12px;
+    margin:0.5rem 1%;
+    text-align: center;
+    -webkit-border-radius: 25px;
+    -moz-border-radius: 25px;
+    border-radius: 25px;
+    height: 1.6rem;
+    line-height:1.6rem;
+
+}
+.h5_wrapper header .mui-search{
+    float:left;
+    width: 75%;
+    margin-left: 2rem;
+    height: 2.3rem;
+    line-height: 2.3rem;
+    margin-top: 2px;
+}
+.h5_wrapper header .mui-search input{
+    margin-bottom: 0rem;
+    height: 1.2rem;
+    /*line-height:1.2rem;*/
+    display: inline;
+    background: #F4F4F4;
+    border-radius: 0.8rem;
+}
+.h5_wrapper header .mui-search .mui-placeholder{
+    line-height: 2.3rem;
+    right: initial;
+    left:0.5rem;
+    font-size: 12px;
+}
+.h5_wrapper header .mui-search.mui-active:before{
+    left:0.5rem;
+}
+.h5_wrapper header .mui-search:before{
+    top:35%
+}
+.shop_hea_img_right{
+    float: right;
+    position: relative;
+}
+.shop_hea_img_right img{
+    width:1.3rem;
+    height: auto;
+    margin-top: 0.6rem;
+}
+.shop_hea_img_right span{
+    position: absolute;
+    top:0.3rem;
+    right: 0rem;
+}
+.shop_hea_img_right .mui-badge{
+    padding:2px 4px;
+}
+.h5_wrapper .shop_banner img{
+    height:8rem;
+}
+.mint-swipe-indicator.is-active{
+    background: #ffffff;
+    width: 22px;
+    border-radius: 30px;
+    opacity: 1;
+}
+.mint-swipe-indicator{
+    opacity:0.7;
+    background: #fff;
+}
+.shop_menu ul li{
+    float: left;
+    width: 25%;
+    text-align: center;
+}
+.shop_menu{
+    padding:0.75rem 4% 0.5rem 4%;
+    background: #ffffff;
+}
+.shop_menu ul li img{
+    width:2.8rem;
+    height: auto;
+    margin:0 auto;
+}
+.shop_banner{
+    margin-top: 2.25rem;
+}
+.shop_menu ul li p{
+    font-size: 0.75rem;
+    color: #333333;
+    margin-top: 0.5rem;
+}
+.shop_two_men{
+    margin:0.3rem 2%
+}
+.shop_two_men ul li{
+    float: left;
+    width: 48%;
+    margin: 0 1%;
+}
+.shop_two_men ul li img{
+    width: 100%;
+    height: 5rem;
+}
+.time_go_div img{
+    width: 0.75rem;
+    display: inline-block;
+    vertical-align: -2px;
+}
+.time_go_div{
+    text-align: center;
+    height: 1.8rem;
+    line-height: 2rem;
+}
+
+.shop_timego .mui-navigate-right:after, .mui-push-left:after, .mui-push-right:after{
+    top: 55%;
+}
+.shop_timego{
+    background: #ffffff;
+}
+.shop_timego .mui-table-view-cell{
+    padding:7px 15px 5px 30px;
+}
+.time_go_div_span1{
+    color: #FF5252;
+    font-size: 0.8rem;
+    font-weight: bolder;
+    margin-left: 8px;
+}
+.time_go_div_span2{
+    font-size: 0.7rem;
+    color: #333333;
+    margin-left: 0.5rem;
+    display: inline-block;
+}
+.time_go_div_span2 i{
+    background: #333333;
+    color: #ffffff;
+    padding:1px 3px;
+    margin:0 3px;
+}
+.time_go_div_span{
+    margin-right: 15px;
+    font-size: 0.7rem;
+    margin-top: 0.5rem;
+}
+.shop_time_shops ul li{
+    float: left;
+    width: 31.3333%;
+    margin:0 1%;
+}
+.shop_time_shops ul li img{
+    width: 100%;
+    height:5.6rem ;
+}
+.shop_time_shops ul li span i{
+    color: #FF5252;
+    font-size: 0.65rem;
+    margin-right: 3px;
+}
+.shop_time_shops ul li p{
+    font-size: 0.75rem;
+    color: #333333;
+    margin:0.5rem 0;
+    /*height: 2.5em;*/
+}
+.shop_time_shops ul li span{
+    color: #FF5252;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.shop_time_shops{
+    padding:0.5rem 2%;
+    background: #ffffff;
+}
+.shop_adver img{
+    height:5.25rem;
+}
+.shop_adver .shop_adver_img1{
+    margin:0.3rem 2%;
+    width: 96%;
+}
+.h5_wrapper .shop_thre_shops{
+    height: 8.5rem;
+    overflow: hidden;
+    margin-top: 0.3rem;
+}
+.h5_wrapper .shop_thre_shops .thre_lefts{
+    width: 40%;
+    height: 100%;
+    margin-right: 2%;
+}
+.h5_wrapper .shop_thre_shops .thre_lefts img{
+    height: 8.5rem;
+    width: 100%;
+}
+.h5_wrapper .shop_thre_shops .thre_rights{
+    width: 58%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+/*.h5_wrapper .shop_thre_shops .thre_rights:before{*/
+    /*content: '';*/
+    /*position: absolute;*/
+    /*top: 51%;*/
+    /*left: 0;*/
+    /*right: 0;*/
+    /*width: 100%;*/
+    /*border-bottom: 1px solid #E0E0E0;*/
+/*}*/
+.shop_recommend_list ul li .lis_img img[lazy=loading] {
+    width: 40px !important;
+    margin: auto;
+}
+.h5_wrapper .shop_thre_shops .thre_rights img{
+    height:4.1rem;
+}
+.shop_recommend{
+    background: #fff;
+    margin-top: 0.3rem;
+}
+.shop_recommend_title{
+    height: 3rem;
+    line-height: 3rem;
+}
+.shop_recommend_title  span{
+    height: 3rem;
+    line-height: 3rem;
+    margin:0 15px 0 0;
+}
+.shop_recommend_title  .time_go_div_span1{
+    color: #FFA800;
+    margin-left: 8px;
+}
+.shop_recommend_title .time_go_div{
+    text-align: center;
+    padding-left: 50px;
+}
+.shop_recommend_title .time_go_div img{
+    width: 1.15rem;
+    display: inline;
+    margin:0;
+    vertical-align:-0.25rem;
+}
+.shop_recommend_title .mui-table-view-cell{
+
+}
+.shop_recommend_list ul li{
+    float: left;
+    width: 49%;
+    margin:0rem 0% 0.5rem 0%;
+}
+.shop_recommend_list ul li:nth-child(odd){
+    margin-right: 2%;
+}
+.shop_recommend_list ul li .pin{
+    position: absolute;
+    top: 0.5rem;
+    left: 0rem;
+    background: url("../../images/shop_menu_time_bg1@2x.png") center;
+    background-size:3rem auto ;
+    width: 3rem;
+    height:1.65rem;
+    text-align: center;
+}
+.shop_recommend_list ul li .time{
+    height: 1.7rem;
+    line-height: 1.7rem;
+    background:rgba(0, 0, 0,0.3);
+    position: absolute;
+    bottom: 0px;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+.shop_recommend_list ul li .time span{
+    color: #fff;
+    font-size: 0.6rem
+}
+.shop_recommend_list ul li .time span i{
+    color: #333333;
+    background: #fff;
+    padding:2px 3px
+}
+.shop_recommend_list ul li .pin span{
+    color: #fff;
+    font-size: 0.8rem;
+    height:1.65rem;
+    line-height: 1.65rem
+}
+.shop_recommend_list ul li .lis_img{
+    width: 100%;
+    height: 8.8rem;
+    position: relative;
+    background: #F0F0F0;
+}
+.shop_recommend_list ul li .lis_img img{
+    width: 100%;
+    height: 100%;
+
+}
+.shop_recommend_list ul li p{
+    font-size: 0.75rem;
+    color: #333333;
+    margin:0.5rem 0;
+    padding-left: 10px;
+}
+.shop_recommend_list ul li span{
+    color: #FF5252;
+    font-size: 0.85rem;
+    padding-left: 10px;
+    font-weight: 600;
+}
+.shop_recommend_list ul li span i{
+    font-size: 0.6rem;
+    color: #FF5252;
+    margin-right: 3px;
+    font-weight: normal;
+}
+.shop_recommend_list{
+    padding:0rem 0%;
+    background: #ffffff;
+}
+.h5_wrapper footer p{
+    padding:0.5rem 0;
+    text-align: center;
+    font-size: 0.75rem;
+    color: #999999;
+}
+.h5_wrapper .mint-spinner-double-bounce{
+    margin:0px auto 15px auto;
+}
+.mint-loadmore-top{
+    position: absolute;
+    top: -1.8rem;
+    left: 0;right: 0;
+    margin: 0;
+}
+.mint-spinner-snake{
+    margin: 0 auto;
+}
+.mint-loadmore{
+    /*background: #fff;*/
+}
+.h5_wrapper header .searchClass .spanSearch{
+    position: absolute;
+    top:0.65rem;
+    font-size:1rem;
+    left:0.25rem;
+}
+.h5_wrapper header .searchClass input{
+    margin-bottom: 0rem;
+    height: 1.3rem;
+    line-height:1.3rem;
+    background: #F4F4F4;
+    border-radius: 0.8rem;
+    text-align: left;
+    font-size:0.65rem;
+    padding-left: 1.2rem;
+}
+.h5_wrapper header .searchClass .mui-placeholder{
+    line-height: 2.3rem;
+    right: initial;
+    left:0.5rem;
+    font-size: 12px;
+}
+.h5_wrapper header .searchClass.mui-active:before{
+    left:0.5rem;
+}
+.h5_wrapper header .searchClass:before{
+    top:35%
+}
+.h5_wrapper header .searchClass{
+    width: 80%;
+    float: left;
+    margin-left: 2rem;
+    margin-top: 2px;
+}

@@ -1,0 +1,78 @@
+.marginCenter{
+  position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 50%;
+    text-align: center;
+}
+.h5_wrapper {
+  background: #fff;
+}
+.h5_wrapper .circle {
+  width: 100%;
+  padding: 0 .7rem;
+  margin-top:2.06rem;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.h5_wrapper .hasData {
+  flex-flow: column wrap;
+}
+.h5_wrapper .hasData .unit {
+  width: 100%;
+  height: 4.41rem;
+  border-bottom: 1px solid #e0e0e0;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.h5_wrapper .hasData .unit .left {
+  display: flex;
+}
+.h5_wrapper .hasData .unit .left .photo {
+  width: 3.19rem;
+  height: 3.19rem;
+  border-radius: 50%;
+}
+.h5_wrapper .hasData .unit .left .photo img {
+  width: 3.19rem;
+  height: 3.19rem;
+  border-radius: 50%;
+}
+.h5_wrapper .hasData .unit .left .txt {
+  margin: .235rem 0 .845rem .656rem;
+  display: flex;
+  flex-flow: column wrap;
+  justify-content: space-between;
+  line-height: 1;
+}
+.h5_wrapper .hasData .unit .left .txt .title {
+  font-size: .75rem;
+}
+.h5_wrapper .hasData .unit .left .txt .note {
+  font-size: .563rem;
+}
+.h5_wrapper .hasData .unit .right .focus {
+  height: 1.177rem;
+  margin-top: -1rem;
+}
+.h5_wrapper .hasData .unit .right .focus .mint-button {
+  width: 2.82rem;
+  height: 1.177rem;
+  background: #e0e0e0;
+  border-radius: .563rem;
+  color: #fff;
+  text-align: center;
+  line-height: 1.177rem;
+  padding: 0;
+  margin: 0;
+}
+.h5_wrapper .hasData .unit .right .unfocus .mint-button {
+  background: #ffa800;
+}

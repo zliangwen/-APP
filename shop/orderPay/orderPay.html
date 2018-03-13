@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>确认订单</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../index/shop.css">
+    <link rel="stylesheet" href="../spellGroup/spellGroup.css">
+    <link rel="stylesheet" href="orderPay.css">
+    <style>
+        .shop_recommend_list ul li .lis_img img[lazy=loading] {
+            width: 40px !important;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak>
+    <!--header-->
+    <header class="clearfix">
+        <!-- <span class="mui-icon mui-icon-back color_fff"></span> -->
+        <span class="font_size_85 color_fff margin_center"  v-text="title"></span>
+        <div class="shop_hea_img_right color_fff font_size_7" >
+        </div>
+    
+    </header>
+    <!--推荐-->
+    <div class="shop_recommend" style="margin-top:2.3rem">
+        <div class="orderPay_img">
+            <img src="../../images/success_icon.png" style="width:50%" />
+            <div class="font_size_75 color_3 text" >恭喜您！{{text}}</div>
+        </div>
+        <ul class="oul">
+            <li  @click="toIndex">
+                <div class="imgAndText font_size_65 color_6"  >
+                    <i><img src="../../images/online_icon.png"/></i>
+                    <span>返回首页</span>
+                </div>
+            </li>
+            <li @click="toshopku">
+                <div class="imgAndText font_size_65 color_6">
+                    <i><img src="../../images/myLion_icon.png"/></i>
+                    <span style="padding-left:2rem">查看我的商品库</span>
+                </div>
+            </li>
+        </ul>
+    </div>   
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm=new Vue({
+        el:'#app',
+        data:{
+            title:"",
+            text:""
+            
+        },
+        created: function () {
+
+        },
+       
+        methods:{
+            toIndex:function(){
+                _g.goIndex();
+            },
+            toshopku: function () {
+                window.location.href="../shopKu/shopKu.html?isDirectBack=1"
+                androidAndIos()
+            },
+           getUrlName:function(){
+            console.log(decodeURI(_g.GetqueryUrl("type")))
+                var that = this;
+                if(_g.GetqueryUrl("type")){
+                    that.title=_g.GetqueryUrl("type");
+                    that.text=_g.GetqueryUrl("name")
+                }else{
+                    that.title="支付成功";
+                    that.text="订单购买成功";
+                }
+           }
+        },
+        mounted: function () {
+            //this.ajaxList()
+            this.getUrlName();
+        },
+        
+
+    })
+</script>
+</body>
+</html>

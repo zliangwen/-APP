@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>拼团专区</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="spellGroup.css">
+    <link rel="stylesheet" href="../index/shop.css">
+    
+    <style>
+        .shop_recommend_list ul li .lis_img img[lazy=loading] {
+            width: 40px !important;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak>
+    <!--header-->
+    <header class="clearfix">
+        <span class="mui-icon mui-icon-back color_fff" @click="goBack"></span>
+        <span class="font_size_85 color_fff margin_center">拼团专区</span>
+        <div class="shop_hea_img_right Url_href" href="../shopCar/shopCar.html?isNeedLogin=1">
+            <img src="../../images/shop_caar@2x.png" alt="" class="img-responsive Url_href" >
+            <span class="mui-badge mui-badge-danger">{{countNum}}</span>
+        </div>
+    
+    </header>
+    <!--推荐-->
+    <div class="shop_recommend" style="margin-top:2.3rem">
+        <div class="shop_recommend_list shop_recommend_list_ol_ol">
+            <ul class="clearfix" v-infinite-scroll="loadMore"
+                infinite-scroll-disabled="loading"
+                infinite-scroll-distance="10">
+                <li v-for="(item,index) in recommends" class="Url_href" :href="'../shopDetails/shopDetails.html?id='+item.goodsId">
+                    <div class="lis_img">
+                        <img v-lazy="item.imageShowUrl" alt="" class="img-responsive"/>
+                        <!-- <div class="time" v-if="">
+                            <span class="fnTimeCountDown time_span" :data-end="item.endTime">距离<span class="day">0</span>天<i class="hour">00</i>:<i class="mini">00</i>:<i class="sec">00</i>结束</span>
+                        </div> -->
+                        <div class="pin" v-if="item.endTime">
+                            <span>拼团</span>
+                        </div>
+                    </div>
+                    <p class="fzs-ellipsis-1">{{item.goodsName}}</p>
+                    <span style="padding-left:.5rem;font-weight: 600">{{item.salePrice | jifen}}<i style="font-weight: 600">积分</i></span>
+                </li>
+            </ul>
+            <div v-if="loading" style="background: #fff">
+                <mt-spinner type="double-bounce" color="#2196F3"></mt-spinner>
+            </div>
+            <footer v-if="show">
+                <p>到底啦~</p>
+            </footer>
+        </div>
+    </div>
+
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm=new Vue({
+        el:'#app',
+        data:{
+            recommends:[],
+            header_menu:false,
+            time_day:0,
+            loading:false,
+            listQuery:{
+                pageSize:10,
+                pageId:1
+            },
+            count:null,
+            show:false,
+            stopLoading:false,
+            countNum:null,
+        },
+        created: function () {
+
+        },
+        methods:{
+            goBack: function () {
+               _g.goBack();
+            },
+
+            loadMore:function() {
+                var that=this
+                if(that.stopLoading){
+                    that.loading = true;
+                    that.listQuery.pageId++
+                    setTimeout(function () {
+                         that.getGroupList();                        
+                    },3000);
+                }
+            },
+            //进入页面首次请求接口获取数据
+            getGroupList:function(){
+                var that = this;
+                _g.ajax("/app/goodsBase/getGoodsGroupbuyList",that.listQuery,function(res){
+                    console.log(res)
+                    if(res.state == true){
+                        if(res.data.isData == true){
+                            that.recommends = that.recommends.concat(res.data.result);
+                            that.count = res.data.rowCount;
+                            //var nowData = new Date(res.data.nowTime)
+                            // that.$nextTick(function(){
+                            //     $(".fnTimeCountDown").fnTimeCountDown(nowData);
+                            // })
+                           
+                            that.loading = false;
+                            that.stopLoading=true
+                        }else{
+                            that.loading = false;
+                            that.stopLoading=false;
+                            that.show = true;
+
+                        }
+                        
+                    }else{
+                        that.loading = false;
+                        that.$toast({
+                            message:res.msg,
+                            position: 'bottom',
+                        })
+                    }
+                })
+            },
+            
+        },
+        mounted: function () {
+            this.getGroupList();
+            _g.getShopCarCount();
+        },
+        filters:{
+            price: function (value) {
+                return parseFloat(value).toFixed(2)
+            },
+            jifen: function (value) {
+                return parseFloat(value).toFixed(0)
+            }
+        }
+    })
+</script>
+</body>
+</html>

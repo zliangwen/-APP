@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>蛙影商品详情</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../index/shop.css">
+    <link rel="stylesheet" href="shopDetails.css">
+
+</head>
+<body>
+<div class="h5_wrapper" id="shopDetailsApp" v-cloak>
+    <!-- <header class="clearfix" style="z-index: 10;background: none;position: relative;">
+        <span class="mui-icon mui-icon-back" @click="goBack"></span> 
+        <div class="shop_hea_img_right margin_right Url_href" href="../shopCar/shopCar.html?isNeedLogin=1&isSinglePage=1" >
+            <img src="../../images/shopcar_icon.png" alt="" class="img-responsive"/>
+             <span class="mui-badge mui-badge-danger">{{countNum}}</span>
+        </div>
+         <div class="shop_hea_img_right margin_right_right">
+            <img src="../../images/share_icon.png" alt="" class="img-responsive"/>
+        </div>
+    </header> -->
+    <mt-swipe :auto="4000" style="height:17.75rem;top:0rem;margin-top:0" class="shop_banner">
+        <mt-swipe-item v-for="(item,index) in goodsDetails.images" :key="item.id"><img :src="item" alt="" class="img-responsives" style="height:17.75rem;"></mt-swipe-item>
+    </mt-swipe>
+    <div style="height:2.5rem;margin-top:0rem" class="clearfix orange" v-if="goodsDetails.isGroupBuy == '01' ">
+        <span class="color_fff font_size_75" style="line-height: 2.5rem;padding-left:0.75rem">
+            差{{personAcount}}人成团
+        </span>
+        <div class="time" style="display: block">
+            <span class="fnTimeCountDown time_span" :data-end="goodsDetails.endTime">距离<span class="day">0</span>天<i class="hour">00</i>:<i class="mini">00</i>:<i class="sec">00</i>结束</span>
+        </div>
+    </div>
+    <div style="height:2.5rem;margin-top:-2.5rem" class="clearfix red" v-if="goodsDetails.isGroupBuy == '01' && goodsDetails.isCreateGroup=='01'">
+        <span class="color_fff font_size_75 pull-left" style="line-height: 2.5rem;padding-left:0.75rem">
+            已成团
+        </span>
+        <mt-progress :value="groupNumber"  class="content" :bar-height="20">
+          <div slot="end" style="line-height: 2.5rem" class="color_fff">{{goodsDetails.groupProgress}}</div>
+        </mt-progress>
+    </div>
+    <div class="clearfix goodsName_top" id="margin_top_1">
+        <div class="color_3 font_size_7 ">{{goodsDetails.goodsName}}</div>
+        <div class="money_jifen clearfix padding_bottom_75" style="padding-top: 20px">
+            <div class="pull-left">
+                <span>{{goodPrice}}</span>
+                <span class="moneyIcon" >积分 </span>
+            </div>
+            <div class="pull-left  clearfix" style="color:#999;font-weight: 500;margin-left:1rem;font-size:0.6rem" v-if="goodsDetails.isGroupBuy == '01'">
+                <del>{{goodsDetails.orginalPrice}} <span class="moneyIcon" style="color:#999">积分 </span></del>
+            </div>
+            <div class="pull-right color_9" style="font-size:0.5rem;font-weight: 500" v-if="goodsDetails.isHasSpec == '01'">总销{{goodsDetails.salesCount}}笔</div>
+            <div class="pull-right color_9" style="font-size:0.5rem;font-weight: 500" v-if="goodsDetails.isHasSpec == '02'">有效期{{goodsDetails.validDate | stringFixed}}</div>
+        </div>
+        <div class="color_9 font_size_65 padding_75">
+            {{goodsDetails.goodsIntro}}
+        </div>
+    </div>
+    <!-- <div class="numAndSize clearfix back"  @click="chooseAction(goodsDetails.id,goodsDetails.isGroupBuy)" v-if="goodsDetails.isPush=='01'">
+        <div class="color_3 font_size_75 pull-left " >{{text}}</div>
+        <span class="mui-icon mui-icon-forward pull-right"></span>
+    </div> -->
+    <div class="imgDetails clearfix back" style="margin-top:0.3rem">
+        <div class="margin_top clearfix">
+            <div class="clearfix margin_center">
+                <span class="pull-left"></span>
+                <span class="pull-left">商品详情</span>
+            </div>
+        </div>
+        <div class="clearfix goodsName_top" style="margin-bottom: 2.5rem">
+            <div v-html="goodsDetails.goodsDetails"></div>
+            <ul class="clearfix">
+                <li v-for="item in banners">
+                    <img :src="item.imgurl"/>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!-- footer -->
+    <footer class="back footer">
+        <div class="cosl" v-if="HtmlSayAction" @click="testApp">{{HtmlSay}}</div>
+        <div class="cosl" v-if="HtmlSay02Action">{{HtmlSay02}}</div>
+        
+    </footer>
+    <!-- 规格弹窗 -->
+    <div class="dialogClass" ></div>
+    <div  class="dialog" >
+        <div class="clearfix back tanc">
+            <span class="denButton" @click="dialogAction">X</span>
+            <div class="tancTop clearfix">
+                <div class="tancImg">
+                    <img :src="goodsDetails.imageShowUrl"/>
+                </div>
+                <div class="tancName">
+                    <div class="tancName_name fzs-ellipsis-2" >{{goodsDetails.goodsName}}</div>
+                    <div class="tancName_name money_jifen"  style="padding-top:0.6rem;">{{goodPrice}}<span class="moneyIcon">积分</span> </div>
+                </div>
+            </div>
+            <div class="spec clearfix" style="height: 10rem;overflow: scroll">
+                <span class="font_size_7" v-if="goodsDetails.goodsClassify == '01 '">规格</span>
+                <ul class="clearfix" v-if="goodsDetails.goodsClassify == '01'">
+                    <li v-for="(item,index) in spec" class="oli" :class="{back_ffa800:tabs == index}" @click="chooseSpec(item,index)">{{item.specificationsValue}}</li>
+                </ul>
+                <div class="shuliang clearfix">
+                    <span class="pull-left font_size_7">数量</span>
+                    <div class="pull-right shuliangjiajian">
+                        <span class="pull-left" @click="changeNum(-1)">-</span>
+                        <span class="pull-left" style="border-left:1px solid #f0f0f0;border-right:1px solid #f0f0f0;width:1.7rem">{{num}}</span>
+                        <span class="pull-left" @click="changeNum(1)">+</span>
+                    </div>
+                    <!--<div style="height: 2.5rem;width: 100%"></div>-->
+                </div>
+
+            </div>
+
+            <!-- <footer class="toback clearfix" v-show="goodsDetails.isPush=='01'">
+                <div class="font_size_75 shopCarAndBuy" @click="joinCar(goodsDetails)">加入购物车</div>
+                <div class="font_size_75 shopCarAndBuy" style="background:#2196f3" @click="newBuy">立即购买</div>
+            </footer>
+            <footer class="toback clearfix" v-show="goodsDetails.isPush=='02'">
+                <div class="font_size_75 shopCarAndBuy" style="background:#999">已下架</div>               
+            </footer> -->
+
+        </div>
+    </div>
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm = new Vue({
+        el:"#shopDetailsApp",
+        data:{
+            
+            isSure:1,
+            endtime:"2018/1/20 12:00:00",
+            banners:[],
+            goodsDetails:{},
+            personAcount:0,
+            goodPrice:null,
+            dialog:false,
+            spec:[],
+            tabs:null,
+            num:1,
+            data:{},
+            delectList:{
+                list:[],
+                totalPrice:null,
+            },
+            isGroupBuy:"",
+            countNum:null,
+            dialogClassNone:false,  
+            text:"选择规格数量" ,
+            groupbuyId:"",
+            goodsClassify:null,
+            id:"",
+            groupNumber:"",
+            //isGroupBuy:""
+            HtmlSay:"立即打开",
+            HtmlSay02:"立即下载",
+            HtmlSayAction:true,
+            HtmlSay02Action:false,
+        },
+        methods:{
+            goBack:function(){
+                 //_g.goBack();
+            },
+            dialogAction:function(){
+                $(".dialog").animate({"bottom":"-100%"})
+                $(".dialogClass").animate({"zIndex":"-1","opacity":"0"})
+            },
+            GetqueryUrl: function (name) {    //解析Url  获取需要字段
+                var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+                var r = window.location.search.substr(1).match(reg);
+                if(r!=null)return  decodeURI(unescape(r[2]),"utf-8"); return null;
+            },
+            //进入页面判断是否安装APP、
+            testApp:function(){
+                var that = this;
+                var ids=that.GetqueryUrl("id")
+                var isAndroid = !!navigator.userAgent.match(/android/ig),
+                        isIos = !!navigator.userAgent.match(/iphone|ipod/ig),
+                        isIpad = !!navigator.userAgent.match(/ipad/ig),
+                        isWeixin = (/MicroMessenger/ig).test(navigator.userAgent),
+                        isQQ = (/qq/ig).test(navigator.userAgent);
+                    if (isAndroid) {
+                        if (isWeixin) { //andorid微信和QQ走微下载
+                            window.location.href = 'waying://massmedia.xiaolang.com/?type=2&id='+ids;
+                            alert('点击右上角选择在浏览器中打开')
+                        } else {
+                            window.location = 'waying://massmedia.xiaolang.com/?type=2&id='+ids;//android app协议
+                            console.log('waying://massmedia.xiaolang.com/?type=2&id='+ids)
+                            window.setTimeout(function() {
+                                that.$messagebox.confirm("是否下载APP?").then(function(act){
+                                     window.location.href = "https://www.baidu.com";//android 下载地址
+                                })
+                            }, 4000)
+                        }
+                    }
+                    else{
+                        if (isWeixin) { //andorid微信和QQ走微下载
+                            window.location.href = 'WaYingApp://';
+                            alert('点击右上角选择在浏览器中打开')
+                        } else {
+                            window.location = "waying://massmedia.xiaolang.com/startapp";//ios app协议
+                            window.setTimeout(function() {
+                                that.$messagebox.confirm("是否下载APP?").then(function(act){
+                                    window.location.href = "https://www.baidu.com";//android 下载地址
+                                })
+                            }, 4000)
+                        }
+                    }
+                },
+
+//               
+           
+            
+            //获取详情数据
+             gtiGoodsDetails:function(){
+                var that = this;
+                var id={
+                    goodsId:_g.GetqueryUrl("id")
+                }
+                _g.ajax("/app/goodsBase/getGoodsDetail",id,function(res){
+                    console.log(res)
+                    if(res.state == true){
+                        that.goodsDetails = res.data;
+                        //that.goodsDetails.images.push(res.data.imageShowUrl)
+                        that.goodPrice = that.goodsDetails.salePrice;
+                        that.personAcount = res.data.minPersons- res.data.buyAccount
+                        that.isGroupBuy = res.data.isGroupBuy;
+                        that.goodsClassify=res.data.goodsClassify;
+                        that.id=res.data.id;
+                        that.groupNumber = res.data.groupNumber;
+                        that.imageShowUrl = res.data.imageShowUrl
+                        var nowDate = new Date(res.data.nowTime);
+                        if(res.data.isGroupBuy == "01"){
+                            that.groupbuyId = res.data.groupbuyId
+                        }else{
+                            that.groupbuyId = "";
+                        }
+                        if(res.data.isHasSpec == "01"){
+                            that.text="选择规格数量"
+                        }else{
+                            that.text="选择数量"
+                        }
+                        if(!res.data.isCreateGroup){
+                            $("#margin_top_1").css("marginTop","-2.3rem")
+                        }
+
+                        that.$nextTick(function(){
+                            $(".fnTimeCountDown").fnTimeCountDown(nowDate);
+                        })
+
+
+                    }
+                })
+            },
+            
+            
+            
+        },
+        mounted: function () {
+            this.gtiGoodsDetails()
+            //this.testApp()
+
+        },
+        filters:{
+          stringFixed:function(val){
+            return val.substring(0,10)
+          },
+        }
+    })
+</script>
+</body>
+</html>

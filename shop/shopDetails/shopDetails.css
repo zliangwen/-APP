@@ -1,0 +1,315 @@
+.h5_wrapper header{
+	position: relative;
+}
+.margin_right_right{
+	margin-right:1rem;
+}
+.margin_right{
+	margin-right:.5rem;
+}
+.goodsName_top{
+	background: #fff;
+	padding: 0.75rem 5% 0;
+}
+.padding_bottom_75{
+	padding:0 0 .5rem;
+	border-bottom:1px solid #e0e0e0;
+}
+.padding_75{
+	padding:0.75rem 0;
+}
+
+.numAndSize{
+	padding:0.75rem 5%;
+	margin:0.3rem 0;
+}
+.back{
+	background:#fff;
+}
+.margin_center{
+	padding:0.75rem 0 0;
+	width:35%;
+	margin:0 auto;
+	text-align: center;
+	position: relative;
+}
+.margin_center span{
+	text-align: right;
+	line-height: 1.25rem;
+	width:100%;
+	padding-right:0.6rem;
+	color:#ffa800;
+	font-weight: 600;
+}
+.margin_center span:nth-child(1){
+	display: inline-block;
+	width:1.25rem;
+	height:1.25rem;
+	background: url(../../images/shop_menu_gouwu@2x.png) no-repeat;
+	background-size:100%;
+	position: absolute;
+	left:0;
+
+}
+.footer{
+	height:2.5rem;
+	width:100%;
+	display: flex;
+	border-top:1px solid #e0e0e0;
+	position: fixed;
+	bottom:0;
+}
+
+.footer .shopCarAndBuy{
+	flex:2;
+	background:#ffa800;
+	color:#fff;
+	text-align: center;
+	line-height: 2.5rem;
+}
+.footer .kefuIcon{
+	position:relative;
+}
+.footer .kefuIcon span:nth-child(1){
+	display: block;
+	width:1rem;
+	height:1.25rem;
+	position: absolute;
+	margin:auto;
+	top:0;
+	left:0;
+	right: 0;
+	bottom: 0.5rem;
+}
+.footer .kefuIcon span{
+	width:100%;
+	text-align: center;
+	display: block;
+	position: absolute;
+	bottom: 0;
+}
+
+/*成团&未成团*/
+.orange{
+	background:#ffa800 url(../../images/juxing_icon.png) no-repeat 100%;
+	background-position: left;
+	background-size: 30% 100%;
+	width:100%;
+	height:2.5rem;
+	position: relative;
+
+}
+.red{
+	background:#ff5252;
+	width:100%;
+	height:2.5rem;
+	position: relative;
+
+}
+.time{
+    height: 2.5rem;
+    line-height: 2.5rem;
+    position: absolute;
+    bottom: 0px;
+    right: 0.75rem;
+    text-align: center;
+
+}
+.time span{
+    color: #fff;
+    font-size: 0.85rem;
+    margin:0 0.2rem;
+
+}
+.time span i{
+    color: #333333;
+    background: #fff;
+    padding:2px 3px;
+    margin:0 0.2rem;
+    border-radius: 2px;
+}
+
+.content{
+	width:80%;
+	height:2.5rem;
+	
+
+}
+video{
+	width:100%;
+}
+
+.content .mt-progress-content{
+	height:2.5rem;
+	margin-left:2.2rem;
+
+}
+.content .mt-progress-content .mt-progress-runway{
+	border-radius: 0.5rem;
+}
+.content .mt-progress-content .mt-progress-progress{
+	border-radius: 0.5rem;
+	background-color:#ffa800;
+}
+
+.dialog{
+	width:100%;
+	height: 60%;
+	position:fixed;
+	bottom: -100%;
+	padding-top: 1px;
+	z-index: 10;
+	left:0;
+	background:rgba(00,00,00,0.7);
+}
+.dialog .tanc{
+	width:100%;
+	height:100%;
+	position: absolute;
+	bottom:0;
+	left:0;
+
+}
+.denButton{
+	display: block;
+	width:1.25rem;
+	border:1px solid #ddd;
+	text-align: center;
+	height:1.25rem;
+	line-height: 1.25rem;
+	color:#ddd;
+	position: absolute;
+	top:0.5rem;
+	right:2%;
+	border-radius: 50%;
+}
+.dialog .tanc .tancTop{
+	width: 100%;
+	/*height:7.5rem;*/
+	display: flex;
+	padding:0rem 2%;
+}
+.dialog .tanc .tancTop .tancImg{
+	flex:1;
+	position: relative;
+}
+.dialog .tanc .tancTop .tancImg img{
+	width:5.55rem;
+	height: 5.55rem;
+	position: absolute;
+	left:0;
+	right:0;
+	bottom: 0;
+	margin:auto;
+}
+.dialog .tanc .tancTop .tancName{
+	flex:2;
+	margin-top:2.85rem;
+	padding-left:0.5rem;
+	font-size: 0.85rem;
+}
+.oli{
+	height:1.4rem;
+	line-height: 1.4rem;
+	padding:0 1rem;
+	background:#f0f0f0;
+	float: left;
+	font-size:.6rem;
+	border-radius: 1rem;
+	margin-left:.5rem;
+	margin-bottom: .5rem;
+}
+.dialog .tanc .spec{
+	padding-left: 2%;
+
+}
+.dialog .tanc .spec ul{
+	padding-top:0.875rem;
+}
+.back_ffa800{
+	background:#ffa800;
+	color:#fff;
+}
+.shuliang{
+	height:1.375rem;
+	margin-top:1.7rem;
+	padding-bottom:2.5rem;
+}
+.shuliang .shuliangjiajian{
+	border:1px solid #f0f0f0;
+	border-radius: 0.3rem;
+	margin-right:0.875rem;
+	width:4.5rem;
+	
+}
+.shuliang .shuliangjiajian span{
+	height:1.7rem;
+	line-height: 1.9rem;
+	width:1.3rem;
+	text-align: center;
+}
+.toback{
+	height:2.5rem;
+	width:100%;
+	/*display: flex;*/
+	border-top:1px solid #e0e0e0;
+	position: absolute;
+	bottom:0;
+}
+
+.toback .shopCarAndBuy{
+	/*flex:2;*/
+	float: left;
+	width: 50%;
+	background:#ffa800;
+	color:#fff;
+	text-align: center;
+	line-height: 2.5rem;
+}
+.toback .kefuIcon{
+	position:relative;
+}
+.toback .kefuIcon span:nth-child(1){
+	display: block;
+	width:1rem;
+	height:1.25rem;
+	position: absolute;
+	margin:auto;
+	top:0;
+	left:0;
+	right: 0;
+	bottom: 0.5rem;
+}
+.toback .kefuIcon span{
+	width:100%;
+	text-align: center;
+	display: block;
+	position: absolute;
+	bottom: 0;
+}
+
+.dialogClass{
+	width:100%;
+	height:100%;
+	position:fixed;
+	bottom: 0;
+	z-index: -1;
+	left:0;
+	opacity:0;
+	background:rgba(00,00,00,0.7);
+
+}
+.h5_wrapper table{
+	width: 100%;
+	table-layout:fixed;/* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */
+}
+.h5_wrapper table tr td,.h5_wrapper table tr th{
+	border:1px solid #ccc;
+	text-align: center;
+	padding:6px 0;
+	/*width:100%;*/
+	/*word-break:keep-all;/!* 不换行 *!/*/
+	/*white-space:nowrap;/!* 不换行 *!/*/
+	/*overflow:hidden;/!* 内容超出宽度时隐藏超出部分的内容 *!/*/
+	/*text-overflow:ellipsis;/!* 当对象内文本溢出时显示省略标记(...) ；需与overflow:hidden;一起使用。*!/*/
+}

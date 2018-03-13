@@ -1,0 +1,71 @@
+html{
+	background:#f0f0f0;
+}
+button{
+ 	width:80%;
+ 	height:2.2rem;
+ 	background:#2196f3;
+ 	border:0;
+ 	margin:6rem 10%;
+ }
+  .marginCenter{
+	position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    width: 50%;
+    text-align: center;
+}
+
+.addressUl{
+  width:100%;
+}
+.addressUl li{
+	padding:0 3%;
+	border-bottom: 0.2rem solid #e0e0e0;
+
+}
+.addressUl li .address{
+	padding:0.4rem 0;
+}
+.addressUl li .addrssTop{
+  display: flex;
+  padding-top:1rem;
+}
+.addressUl li .addrssTop div{
+	flex:1;
+}
+.addressUl li .addrssTop div.addressName{
+	
+}
+.addressBottom{
+	display: flex;
+	padding:0.75rem 0;
+	border-top:1px solid #f0f0f0;
+}
+
+.addressBottom div{
+	flex:1;
+	text-align: center;
+}
+.addressBottom div i{
+	display: block;
+	width:0.9rem;
+	height:0.9rem;
+	border:1px solid #f0f0f0;
+	border-radius: 50%;
+}
+
+.color_ffa800{
+	padding-left:.5rem;
+}
+
+
+.addressBottom div em{
+	display: block;
+	width:0.8rem;
+	
+	margin-right:0.25rem;
+}

@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>确认订单</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../index/shop.css">
+    <link rel="stylesheet" href="../spellGroup/spellGroup.css">
+    <link rel="stylesheet" href="order.css">
+    <style>
+        .shop_recommend_list ul li .lis_img img[lazy=loading] {
+            width: 40px !important;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak>
+    <!--header-->
+    <header class="clearfix">
+        <span class="mui-icon mui-icon-back color_fff" @click="goBack"></span>
+        <span class="font_size_85 color_fff margin_center"  v-text="title"></span>
+        <div class="shop_hea_img_right color_fff font_size_7" >
+        </div>
+    
+    </header>
+    <!--推荐-->
+    <div class="shop_recommend" style="margin-top:2.3rem;">
+        <div class="shop_recommend_list shop_recommend_list_ol shopCar_list1" style="margin-bottom:2.5rem">
+            <ul class="clearfix oul" >
+               <li v-for="item in list">
+                   <div class="imgList">
+                       <img :src="item.imageShowUrl"/>
+                   </div>
+                   <div class="list_name">
+                       <div class="color_3 font_size_7 fzs-ellipsis">{{item.goodsName}}</div>
+                       <div class="color_9 font_size_65 fzs-ellipsis" style="padding-top:0.75rem" v-if="item.specName">规格:{{item.specName}}</div>
+                       <div class="color_9 num" style="text-align: right" >x{{item.goodsNum}}</div>
+                       <div class="color_red list_price">{{item.salePrice}}<em>积分</em></div>
+                   </div>
+               </li>
+            </ul>
+            <div class="length">共{{len}}件商品</div>
+        </div>
+    </div>
+    
+    <footer>
+        <div style="text-align: right;padding-right:.75rem;border-top:1px solid #999">合计:<span class="list_price color_red">{{count}}<em>积分</em></span></div>
+        <div style="background:#2196f3;flex:1" class="color_fff font_size_7" @click="toPay">立即支付</div>
+    </footer>
+    
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm=new Vue({
+        el:'#app',
+        data:{
+            title:"确认订单",
+            list:[],
+            count:null,
+            len:null,
+
+            
+        },
+        created: function () {
+
+        },
+       
+        methods:{
+            goBack:function(){
+                 _g.goBack();
+            },
+            ajaxList: function () {
+                var that=this
+                this.$indicator.open({
+                    spinnerType: 'fading-circle'
+                });
+                _g.ajax('shop_list',{},function(res){
+                    if(res.code==0){
+                        that.recommends=that.recommends.concat(res.data.rows)
+                        that.$nextTick(function(){
+                            $(".fnTimeCountDown").fnTimeCountDown();
+                        })
+                        that.loading = false;
+                    }
+                    else{
+                        that.$toast({
+                            message:res.msg,
+                            position: 'bottom',
+                        })
+                    }
+                })
+            },
+            //获取购物车传过来的数据
+            getSessionAndIsBuyNow:function(){
+                 var that = this;
+                 //立即购买groupBuyId=01
+                if(_g.GetqueryUrl("isBuyNow")=="01"){
+                    var data={
+                        goodsId:_g.GetqueryUrl("data"),
+                        goodsNum:_g.GetqueryUrl("goodsNum"),
+                        groupbuyId:_g.GetqueryUrl("groupBuyId"),
+                        specId:_g.GetqueryUrl("specId")
+                    }
+                    console.log(data)
+                    _g.ajax("/app/orderSubmit/buyNow",data,function(res){
+                        console.log(res)
+                        if(res.state == true){
+                            that.list = res.data.cartBaseList;
+                            that.len = res.data.sl;
+                            that.count = res.data.totalMoney
+                        }
+                    })
+                }else{
+
+                    var data={
+                        cartIds:_g.GetqueryUrl("data")
+                    }
+                    _g.ajax("/app/orderSubmit/settlementPay",data,function(res){
+                        console.log(res)
+                        if(res.state == true){
+                            that.list = res.data.cartBaseList; 
+                            that.len = res.data.sl;
+                            that.count = res.data.totalMoney
+                        }
+                    })    
+                }
+               
+                // this.list = _g.owner.settings()  
+                // this.count = this.list.totalPrice; 
+                // this.len = this.list.list.length; 
+                // console.log(this.list) 
+                
+            },
+            //立即支付
+            toPay:function(){
+                var that = this;
+                if(_g.GetqueryUrl("isBuyNow") == "01"){
+                    //立即购买支付
+                    var data={
+                        isBuyNow:_g.GetqueryUrl("isBuyNow"),
+                        goodsId:_g.GetqueryUrl("data"),
+                        goodsNum:_g.GetqueryUrl("goodsNum"),
+                        groupbuyId:_g.GetqueryUrl("groupBuyId"),
+                        specId:_g.GetqueryUrl("specId"),
+                        totalMoney:that.count,
+                    }
+
+                }else if(_g.GetqueryUrl("isBuyNow") == "02"){
+                    //购物车支付
+                   
+                    var data={
+                        isBuyNow:_g.GetqueryUrl("isBuyNow"),
+                        cartIds:_g.GetqueryUrl("data"),
+                        totalMoney:that.count,
+                        
+                    }
+                }
+                console.log(data)
+                that.$messagebox.confirm("是否确认支付?").then(function(action){
+                    that.$indicator.open({
+                        text:'正在支付',
+                        spinnerType: 'fading-circle'
+                    });
+                    setTimeout(function(){
+                       _g.ajax("/app/orderSubmit/createOrder",data,function(res){
+                            console.log(res)
+                            if(res.state == true){
+                                if(res.data != "01"){
+                                    androidAndIos()
+                                    window.location.href="../orderPay/orderPay.html?isDirectBack=1"
+                                }else{
+                                    that.$messagebox.confirm("积分不足,是否去充值?").then(function(){
+                                        window.location.href="../integral/integral.html"
+                                    }).catch(function(){
+
+                                    })
+                                    
+                                }
+                                //that.$indicator.close();
+                                
+                            }else{
+                                that.$toast({
+                                    message:res.msg,
+                                    position: 'bottom',
+                                })
+                            }
+                        })
+                    },3000)
+                   
+
+                    
+                }).catch(function(err){
+
+                })
+
+            }
+            
+        },
+        mounted: function () {
+            //this.ajaxList()
+            this.getSessionAndIsBuyNow()
+        },
+        
+
+    })
+</script>
+</body>
+</html>

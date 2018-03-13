@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>邀请好友</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="invite.css">
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak style="height: 100%">
+    <mt-header title="邀请好友" fixed>
+        <span slot="left">
+            <mt-button icon="back" @click="goBack"></mt-button>
+        </span>
+    </mt-header>
+    <div class="content" style="height: 100vh">
+        <div class="line1 line">成功邀请好友注册</div>
+        <div class="line2 line">您将获得<span style="color: #ff4948"><span style="font-size: 2rem">{{invitePoints}}</span>积分</span></div>
+        <div class="line line3" style="padding-top: 1rem">您的邀请码是</div>
+        <div class="line line3 line4" style="padding-top: 2rem">{{UserInvitationCode}}</div>
+        <div class="line line5" @click="invite">立即邀请</div>
+    </div>
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm = new Vue({
+        el: '#app',
+        data: {
+            UserInvitationCode:'',
+            invitePoints:null,
+            img:'/images/invitefriend.jpg'
+        },
+        methods: {
+            ajaxList: function () { //初始化
+                var that=this;
+                _g.ajax('/app/user/userDetails',{
+                },function(res){
+                    if(res.state){
+                       that.UserInvitationCode=res.data.dataList[0].UserInvitationCode
+                       that.invitePoints=res.data.dataList[0].invitePoints
+                    }
+                    else{
+                        that.$toast({
+                            message:res.msg,
+                            position: 'bottom',
+                        })
+                    }
+                },true)
+            },
+            goBack: function () {
+                _g.goBack()
+            },
+            invite: function () {
+                console.log(window.Hybid)
+                _g.toShare('/mine/invite/invitefriend.html?number='+this.UserInvitationCode,'','邀请好友')
+            }
+        },
+        mounted: function () {
+            this.ajaxList()
+        }
+    })
+</script>
+</body>
+</html>

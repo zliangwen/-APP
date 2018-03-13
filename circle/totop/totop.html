@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>置顶消息</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="totop.css">
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak style="height: 100%">
+    <mt-header title="置顶消息" fixed>
+        <span slot="left">
+            <mt-button icon="back" @click=""></mt-button>
+        </span>
+    </mt-header>
+    <div class="circle" v-if="circleId==1" style="height:100vh;">
+        <span class="color_9">精选推荐还没有数据^-^</span>
+    </div>
+    <div class="circle hasData" v-else>
+        <div class="topBtn">置顶</div>
+        <p v-text="data.content"></p>
+        <div v-if="loading" style="background: #fff;">
+            <mt-spinner type="double-bounce"></mt-spinner>
+        </div>
+    </div>
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm = new Vue({
+        el: '#app',
+        data: {
+            circleId: 0,
+            loading:false,
+            data:{},
+        },
+        methods: {
+            loadMore() {
+                var that=this
+                that.loading = true;
+                var item={
+                    photo:'../../images/circle1@2x.png',
+                    title:'电影《无问西东》',
+                    people:2135,
+                    post:12.6,
+                    btnId:1
+                }
+                if(that.items.length==10){
+                    that.loading = false;
+                    return
+                }
+                setTimeout(function () {
+                    that.items.push(item)
+                    that.loading = false;
+
+                },2000);
+            },
+            getUrlType:function(){
+                var that = this;
+                _g.ajax("/app/circleNotice/view",{id:_g.GetqueryUrl('id')},function(res){
+                    console.log(res)
+                    if(res.state == true){
+                        that.data=res.data;
+                    }
+                })
+            }
+
+        },
+        mounted: function () {
+            this.getUrlType()
+        }
+    })
+</script>
+</body>
+</html>

@@ -1,0 +1,699 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>我的商品库</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../index/shop.css">
+    <link rel="stylesheet" href="shopKu.css">
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak>
+    <!--header-->
+    <header class="clearfix" >
+        <span class="mui-icon mui-icon-back color_fff pull-left" style="padding-top:0.55rem;" @click="goBack"></span>
+        <div class="tabBar">
+            <div class="tabBar_left font_size_7  active" @click="myShopKu">我的商品库</div>
+            <div class="tabBar_right font_size_7  active_right" @click="myKu">我收到的礼物</div>
+        </div>
+    </header>
+    <!--打赏的礼物-->
+    <div class="shop_recommend" style="margin-top:2.3rem;" v-if="liwuTrue">
+        <div class="tabNav">
+            <ul class="clearfix oul">
+                <li v-for="(item,index) in list" @click="chooseTab(index)">
+                    <i class="color_3" :class="{a_active:tabs == index}">{{item.content}}</i>
+                </li>
+                
+            </ul>
+        </div>
+        <div class="shopList clearfix" >
+            <ul class="clearfix " style="background:#f0f0f0" v-infinite-scroll="loadMore"
+                infinite-scroll-disabled="loading"
+                infinite-scroll-distance="10">
+                <li v-for="val in recommends">
+                    <!-- <div>{{val.goodsState}}</div> -->
+                    <div class="clearfix" style="padding:0.5rem 2%;border-bottom: 1px solid #ddd">
+                        <span class="pull-left">订单状态</span>                        
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '02'">待使用</span>
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '03'">待发货</span>
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '04'">待收货</span>
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '05'">已完成</span>
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '06'">已失效</span>
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '10'">已兑换积分</span>
+                    </div>
+                    <div class="listImgAndName Url_href" :href="'../shopDetails/shopDetails.html?id='+val.goodsId">
+                        <div class="listImg">
+                            <img :src="val.imageShowUrl" />
+                        </div>
+                        <div class="listName">
+                           
+                            <div class="fzs-ellipsis">{{val.goodsName}}</div>
+                            <div v-if="val.specValue" class="fzs-ellipsis" style="padding:0.2rem 0 0.5rem 0;color:#999">{{val.specValue  | fzsAction}}</div>
+                            <div class="pull-right list_num">x{{val.goodsNum}}</div>
+                            <div class="list_price fe">{{val.goodsPrice}}<em>积分</em></div>
+                        </div>
+                    </div>
+                    <div class="listBottom clearfix" v-if="val.goodsState=='02' || val.goodsState=='03' || val.goodsState=='04' || val.goodsState =='09'">
+                        <span class="span_color_e0" v-if="val.goodsState=='02' && val.goodsClassify == '01'" @click="pinkGoods(val,1)">提货</span>
+                        <span class="span_color_e0" v-if="val.goodsState=='02' && val.goodsClassify == '01'" @click="duihuanjifen(val,1)">兑换积分</span>
+                        <span class="span_color_e0" v-if="val.goodsState=='04' && val.goodsClassify == '01'" @click="surePinkGoods02(val,1)">确认收货</span>
+                        <span class="span_color_e0" v-if="val.goodsState=='04' && val.goodsClassify == '01'" @click="chakanwuliu(val,1)">查看物流</span>
+                        <span class="span_color_e0" v-if="val.goodsState=='02' && val.goodsClassify == '02'" @click="sureUse02(val)">确认使用</span>
+                        <span class="span_color_e0" v-if="val.goodsState=='03' && val.goodsClassify == '01' " @click="fundxinxi(val)">查看信息</span>
+                        <a v-if="val.goodsClassify == '02' " style="padding-left:2%">有效期至：{{val.validDate}}</a>
+
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <!--我的商品库-->
+    <div class="recommends_list" style="margin-top:2.3rem;" v-if="shopTrue">
+        <div class="tabNav">
+            <ul class="clearfix oul">
+                <li v-for="(item,index) in list1" @click="chooseTabMy(index)">
+                    <i class="color_3" :class="{a_active:tabsNew == index}">{{item.content}}</i>
+                </li>
+            </ul>
+        </div>
+        <div class="shopList clearfix">
+            <ul class="clearfix " style="background:#f0f0f0" v-infinite-scroll="loadMore"
+                infinite-scroll-disabled="loading"
+                infinite-scroll-distance="10">
+                <li v-for="(val,index) in recommends">
+                     <!-- <div>{{val.goodsState}}</div> -->
+                    <div class="clearfix" style="padding:0.5rem 2%;border-bottom: 1px solid #ddd">
+                        <span class="pull-left">订单状态</span>
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '01'">待成团</span>
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '02'">待使用</span>
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '03'">待发货</span>
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '04'">待收货</span>
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '05'">已完成</span>
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '06'">已失效</span>
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '07'">退款中</span>
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '08'">退款成功</span>
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '09'">待收货(退款失败)</span>
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '10'">已兑换积分</span>
+                        <span class="pull-right color_ffa800" v-if="val.goodsState == '11'">拼团失败-已退款</span>
+                    </div>
+                   <div class="listImgAndName Url_href" :href="'../shopDetails/shopDetails.html?id='+val.goodsId+'&count=1'">
+                        <div class="listImg">
+                            <img :src="val.imageShowUrl" />
+                        </div>
+                        <div class="listName">
+                            <div class="fzs-ellipsis">{{val.goodsName}}</div>
+                            <div v-if="val.specValue" class="fzs-ellipsis" style="padding:0.2rem 0 0.5rem 0;color:#999">{{val.specValue | fzsAction}}</div>
+                            <div class="pull-right list_num">x{{val.goodsNum}}</div>
+                            <div class="list_price">{{val.goodsPrice}}<em>积分</em></div>
+                        </div>
+                    </div>
+                    <div class="listBottom clearfix" v-if="val.goodsState=='02' || val.goodsState=='03' || val.goodsState=='04' || val.goodsState=='09' || val.goodsState=='01'">
+                        <span class="span_color_e0" v-if="val.goodsState=='02' && val.goodsClassify == '01'" @click="pinkGoods(val,0)">提货</span>
+                        <span class="span_color_e0" v-if="val.goodsState=='02' && val.goodsClassify == '01'" @click="duihuanjifen(val,0)">兑换积分</span>
+                        <span class="span_color_e0" v-if="val.goodsState=='02' && val.goodsClassify == '01' " @click="refund03(val)">申请退款</span>
+                        <span class="span_color_e0" v-if="val.goodsState=='03' && val.goodsClassify == '01' " @click="refund03(val)">申请退款</span>
+                        <span class="span_color_e0" v-if="val.goodsState=='04' || val.goodsState=='09' && val.goodsClassify == '01'" @Click="surePinkGoods01(val)">确认收货</span>
+                        <span class="span_color_e0" v-if="val.goodsState=='04' && val.goodsClassify == '01'" @click="toRefund(val)">申请退款</span>
+                       <span class="span_color_e0" v-if="val.goodsState=='03' && val.goodsClassify == '01'" @click="fundxinxi(val)">查看信息</span>
+                        <span class="span_color_e0" v-if="val.goodsState=='04' && val.goodsClassify == '01' ||  val.goodsState=='09'" @click="chakanwuliu(val,0)">查看物流</span>
+                        <span class="span_color_e0" v-if="val.goodsState=='02' && val.goodsClassify == '02' " @click="sureUse(val)">确认使用</span>
+                        <a v-if="val.goodsClassify == '02' " style="padding-left:2%">有效期至：{{val.validDate}}</a>
+                    </div>
+                </li>
+            </ul>
+        </div>       
+    </div>
+     <div v-if="loading" style="background: #fff">
+        <mt-spinner type="double-bounce" color="#2196F3"></mt-spinner>
+    </div>
+    <div class="allNullClass clearfix" v-if="allNull">
+        <img src="../../images/shangpinku.png"/>
+        <p class="color_9" style="text-align: center;">这里空空如也~</p>
+    </div>
+    <div class="allNullClass clearfix" v-if="show">
+        <p class="color_9" style="text-align: center;">没有更多数据~</p>
+    </div>
+    <div class="popub" v-if="showPopub" @click="showPopub = false">
+        <div  style="overflow-y:auto">
+            <p style="text-align: center;">个人信息</p>
+            <p class="p">姓名：{{gerenInfo.userName}}</p>
+            <p class="p">联系方式：{{gerenInfo.phone}}</p>
+            <p class="p">收货地址：{{gerenInfo.address}}</p>
+        </div>
+    </div>
+    
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var shopIndex=0
+    var Vm=new Vue({
+        el:'#app',
+        data:{
+            list:[
+                {content:"全部",id:"0"},
+                {content:"待使用",id:"1"},
+                {content:"待发货",id:"2"},
+                {content:"待收货",id:"3"},
+            ],
+            tabps:[
+                {id:0,name:'我的商品库'},
+                {id:1,name:'我收到的礼物'}
+            ],
+            list1:[
+                {content:"全部",id:"0"},
+                {content:"待成团",id:"1"},
+                {content:"待使用",id:"2"},
+                {content:"待发货",id:"3"},
+                {content:"待收货",id:"4"},
+                {content:"退款中",id:"5"},
+            ],
+            tabs:0,
+            tabnum:0,
+            tabsNew:0,
+            recommends:[],
+            liwuList:[],
+            listQuery:{
+                pageSize:10,
+                pageId:1
+            },
+            listPage:{
+                pageSize:4,
+                pageId:1
+            },
+            shopTrue:true,
+            liwuTrue:false,
+            allNull:false,
+            loading:false,
+            stopLoading:false,
+            show:false,
+            shopKuIndex:0,
+            showPopub:false,
+            gerenInfo:{},
+        },
+        created: function () {
+
+        },
+       
+        methods:{
+            goBack:function(){
+                 _g.goIndex();
+            },
+            //我的商品库
+            myShopKu:function(){
+                shopIndex=0
+                this.listQuery.pageId=1;
+                
+                this.recommends=[];
+                this.listQuery.pageId=1;                
+                //this.recommends=[];
+
+                this.GetShopKuList();                
+                this.shopTrue = true; 
+                this.liwuTrue = false;
+                this.show = false;
+                $(".tabBar_left").removeClass("active_left")
+                $(".tabBar_left").addClass("active").siblings().removeClass('active_right_fff');
+                $(".tabBar_left").siblings().addClass('active_right');
+
+            },
+            //收到的礼物
+            myKu:function(){
+                shopIndex=1
+                this.listQuery.pageId=1;
+
+                this.recommends=[];
+                this.listQuery.pageId=1;                 
+                //this.recommends=[];
+                this.GetliwuShopList();                
+                this.shopTrue = false; 
+                this.liwuTrue = true; 
+                this.show = false; 
+                $(".tabBar_right").removeClass("active_right");
+                $(".tabBar_right").addClass("active_right_fff").siblings().removeClass('active');
+                $(".tabBar_right").siblings().addClass('active_left')
+            },
+            //打赏的礼物tab切换
+           chooseTab:function(index){
+               if(this.loading){
+                   return false
+               }
+                var that = this;
+                that.tabs=index;
+                //that.recommends=[];
+                that.show = false;
+                that.listPage.pageId=1;
+                if(index==0){ 
+                    //全部
+                    that.listPage.orderState="01";
+                    that.GetliwuShopList(); 
+                }else if(index == 1){
+                    //待使用
+                    that.listPage.orderState="03";
+                    that.GetliwuShopList(); 
+                    
+                }else if(index == 2){
+                    //代发货
+                    that.listPage.orderState="04";
+                    that.GetliwuShopList(); 
+                     
+                }else if(index == 3){
+                    //待收货
+                    that.listPage.orderState="05";
+                    that.GetliwuShopList(); 
+                }
+           },
+           //我的商品库tab切换
+           chooseTabMy:function(index){
+                if(this.loading){
+                    return false
+                }
+                this.loading=false;
+                this.tabsNew = index;
+                //this.shopKuIndex = index;
+                this.show=false;
+                var that = this;
+                that.listQuery.pageId=1;
+                //that.recommends=[];
+                if(index == 0){
+                    //全部
+                    that.listQuery.orderState ="01";
+                    that.GetShopKuList()
+                }else if(index == 1){
+                    //待成团
+                    that.listQuery.orderState ="02";
+                    that.GetShopKuList()
+                }else if(index == 2){
+                    //待使用
+                    that.listQuery.orderState ="03";
+                    that.GetShopKuList()
+                }else if(index == 3){
+                    //待发货
+                    that.listQuery.orderState ="04";
+                    that.GetShopKuList()
+                }else if(index == 4){
+                    //待收货
+                    that.listQuery.orderState ="05";
+                    that.GetShopKuList()
+                }else if(index == 5){
+                    //退款中
+                    that.listQuery.orderState ="06";
+                    that.GetShopKuList()
+                }
+           },
+            //商品库申请退款 、 待使用，待发货状态下 不需要审核
+            refund03:function(val,index){
+                var that = this;
+                that.listQuery.pageId = 1;
+                if(that.tabsNew == 0){
+                    that.listQuery.orderState ="01";
+                    that.reload(val)
+                }else if(that.tabsNew == 2){
+                    that.listQuery.orderState ="03";
+                    that.reload(val)
+                }else if(that.tabsNew == 3){
+                    that.listQuery.orderState ="04";
+                    that.reload(val)
+                }                               
+                
+            },
+            //操作后刷新数据
+            reload:function(val){
+                var that = this;
+                console.log()
+                that.$messagebox.confirm("是否确认退款?","提示").then(function(action){
+                    _g.ajax("/app/orderSubmit/refundMoney",{orderId:val.id},function(res){
+                        if(res.state == true){
+                            //that.listQuery.orderState ="03";
+                           
+                            that.$messagebox.alert("您的积分已原路退回,退款积分:"+val.totalMoney,"申请退款成功")
+                             that.GetShopKuList()
+                        }else{
+                            that.$messagebox.alert(res.msg)
+                        }
+                    })
+                }).catch(function(act){
+
+                })
+            },
+            //待收货的商品退款需要审核
+            toRefund:function(val){
+                var that= this;
+                if(that.tabsNew == 0){
+                   that.listQuery.orderState ="01"; 
+                }else if(that.tabsNew == 4){
+                        that.listQuery.orderState ="06";
+                }
+                that.$messagebox.confirm("是否确认退款?","提示").then(function(action){
+                    _g.ajax("/app/orderSubmit/refundMoney",{orderId:val.id},function(res){
+                        if(res.state == true){
+                            that.$messagebox.alert("等平台确认后您的积分将原路退回,退款积分:"+val.totalMoney,"申请退款成功")
+                            that.tabsNew = 5;
+                            that.listQuery.orderState ="06";
+                            that.GetShopKuList()
+                        }else{
+                            that.$messagebox.alert(res.msg)
+                        }
+                    })
+                }).catch(function(act){
+
+                })
+            },
+            //虚拟商品确认使用
+            sureUse:function(val){
+                var that = this;
+                if(that.tabsNew == 0){
+                   that.listQuery.orderState ="01"; 
+                }else if(that.tabsNew == 2){
+                        that.listQuery.orderState ="03";
+                }
+                that.$messagebox.confirm("是否确认使用?","提示").then(function(action){
+                    _g.ajax("/app/orderSubmit/confirmToUse",{orderId:val.id},function(res){
+                        if(res.state == true){
+                            that.GetShopKuList()
+                            that.$messagebox.alert(res.msg)
+                        }else{
+                            that.$messagebox.alert(res.msg)
+                        }
+                    })
+                }).catch(function(err){
+
+                })
+            },
+            sureUse02:function(val){
+                var that = this;
+                if(that.tabs == 0){
+                   that.listQuery.orderState ="01"; 
+                }else if(that.tabs == 1){
+                        that.listQuery.orderState ="03";
+                }
+                that.$messagebox.confirm("是否确认使用?","提示").then(function(action){
+                    _g.ajax("/app/orderSubmit/confirmToUse",{orderId:val.id},function(res){
+                        if(res.state == true){
+                            that.$messagebox.alert(res.msg)
+                            that.GetliwuShopList()
+                        }else{
+                            that.$messagebox.alert(res.msg)
+                        }
+                    })
+                }).catch(function(err){
+
+                })
+            },
+            //确认收货
+            surePinkGoods01:function(val){
+                var that = this;
+                console.log(that.tabsNew)
+                if(that.tabsNew == 0){
+
+                    that.listQuery.orderState ="01";
+                    that.$messagebox.confirm("是否确认收货?","提示").then(function(action){
+                        _g.ajax("/app/orderSubmit/confirmReceipt",{orderId:val.id},function(res){
+                            if(res.state == true){
+                                that.$messagebox.alert(res.msg)
+                                that.GetShopKuList()
+
+                            }else{
+                                that.$messagebox.alert(res.msg)
+                            }
+                        })
+                    }).catch(function(res){
+
+                    })
+                }else if(that.tabsNew == 4){
+                    that.listQuery.orderState ="05";
+                    that.$messagebox.confirm("是否确认收货?","提示").then(function(action){
+                        _g.ajax("/app/orderSubmit/confirmReceipt",{orderId:val.id},function(res){
+                            if(res.state == true){
+                                that.$messagebox.alert(res.msg)
+                                that.GetShopKuList()
+
+                            }else{
+                                that.$messagebox.alert(res.msg)
+                            }
+                        })
+                    }).catch(function(res){
+
+                    })
+                }
+                
+            },
+            sureShouhuo:function(val){
+                var that = this;               
+                
+            },
+
+            surePinkGoods02:function(val){
+                var that = this;
+                that.listPage.pageId=1;
+                if(that.tabs == 0){
+                    that.listPage.orderState ="01"; 
+                    that.$messagebox.confirm("是否确认收货?","提示").then(function(action){
+                        _g.ajax("/app/orderSubmit/confirmReceipt",{orderId:val.id},function(res){
+                            if(res.state == true){
+                                that.GetliwuShopList()
+                                that.$messagebox.alert(res.msg)
+                                
+                            }else{
+                                that.$messagebox.alert(res.msg)
+                            }
+                        })
+                    }).catch(function(res){
+
+                    })
+                }else if(that.tabs == 3){
+                    that.listPage.orderState ="05";
+                    that.$messagebox.confirm("是否确认收货?","提示").then(function(action){
+                        _g.ajax("/app/orderSubmit/confirmReceipt",{orderId:val.id},function(res){
+                            if(res.state == true){
+                                that.GetliwuShopList()
+                                that.$messagebox.alert(res.msg)
+                                
+                            }else{
+                                that.$messagebox.alert(res.msg)
+                            }
+                        })
+                    }).catch(function(res){
+
+                    })
+                }
+                
+            },
+            
+            //兑换积分
+            duihuanjifen:function(val,count){
+                if(count == 1){
+                    window.location.href="../toRedeem/toRedeem.html?orderId="+val.id;
+                }else{
+                    window.location.href="../toRedeem/toRedeem.html?orderId="+val.id+"&count=1";
+                }
+            },
+            //提货
+            pinkGoods:function(val,count){
+                if(count==1){
+                   window.location.href="../pickGoods/pickGoods.html?isBackShop=1"+"&orderId="+val.id;
+                }else{
+                    window.location.href="../pickGoods/pickGoods.html?isBackShop=1&count=1"+"&orderId="+val.id; 
+                }                
+                localStorage.setItem("orderId",val.id)
+            },
+            //查看信息
+            fundxinxi:function(val){
+                this.showPopub = true;
+                var that = this;
+                _g.ajax("/app/orderSubmit/getReceiptInfomation",{orderId:val.id},function(res){
+                    if(res.state == true){
+                        that.gerenInfo = res.data
+                    }
+                })
+            },
+            //查看物流
+            chakanwuliu:function(val,count){
+                if(count == 1){
+                    window.location.href="../logistics/logistics.html?id="+val.id;
+                }else{                   
+                    window.location.href="../logistics/logistics.html?id="+val.id+"&count=1";
+                }
+                
+            },
+            //我的商品库上拉加载
+             loadMore:function(){
+                var that = this;
+                if(that.stopLoading){
+                    that.loading = true;
+                    that.listQuery.pageId++
+                    setTimeout(function(){
+                        if(that.shopTrue){
+                            _g.ajax("/app/orderSubmit/getMyGoodsList",that.listQuery,function(res){
+                                
+                                if(res.state == true){
+                                    that.recommends=that.recommends.concat(res.data)                      
+                                    that.loading = false;
+                                    that.stopLoading = true;
+                                    that.allNull=false;
+                                    //that.listQuery.pageId++
+                                }else{
+                                    that.allNull=false;
+                                    that.show=true;
+                                    that.stopLoading = false
+                                    that.loading = false;                        
+                                }
+                            })
+                        }else{
+                            _g.ajax("/app/orderSubmit/getMyGiftList",that.listQuery,function(res){
+                                    that.allNull=false;
+                                    if(res.state == true){
+                                        that.recommends=that.recommends.concat(res.data)
+                                        that.loading = false;
+                                        that.stopLoading = true
+                                        //that.listQuery.pageId++
+                                    }else{
+                                        that.allNull=false; 
+                                        that.show=true;
+                                        that.stopLoading = false
+                                        that.loading = false;                        
+                                    }
+                                })
+
+                        }
+                        
+                    },800)
+                }
+             },
+            
+           //进入页面获取所有数据
+           GetShopKuList:function(val){
+                var that = this;
+                that.recommends=[]
+                that.listQuery.pageId=1
+                _g.ajax("/app/orderSubmit/getMyGoodsList",that.listQuery,function(res){
+                    console.log(res)
+                    console.log(that.listQuery)
+                    that.allNull=false;
+                    if(res.state == true){
+                        that.recommends=res.data  
+                        that.stopLoading  = true;                  
+                    }else{
+                        that.recommends=[]
+
+                        that.allNull=true;
+                    }
+                },true)
+           },
+            
+           //我打赏的礼物数据
+           GetliwuShopList:function(val){
+                var that = this;
+                that.recommends=[]
+                that.listPage.pageId=1;
+                _g.ajax("/app/orderSubmit/getMyGiftList",that.listPage,function(res){
+                     that.allNull=false;
+                     if(res.state == true){
+                        that.recommends = res.data
+                        that.stopLoading = true
+                     }else{
+                        that.recommends=[]
+                        that.allNull=true;
+                        that.show=false;
+                        
+                     }
+                },true)
+           },
+           getUrlType:function(){
+                var that = this;
+                that.listQuery.pageId=1;  
+                that.recommends=[];              
+                if(_g.GetqueryUrl('type')==0){
+                    //我的商品库 全部
+                    shopIndex=0;
+                    that.shopTrue = true;
+                    that.liwuTrue = false;
+                    that.listQuery.orderState ="01";
+                    that.GetShopKuList()
+                }else if(_g.GetqueryUrl('type')==1){
+                    //我的商品库 待成团
+                    that.tabsNew=1;                   
+                    that.listQuery.orderState ="02";
+                    that.GetShopKuList()                    
+                }else if(_g.GetqueryUrl('type')==2){
+                    //我的商品库 待使用
+                    that.tabsNew=2;                   
+                    that.listQuery.orderState ="03";
+                    console.log(that.listQuery)
+                    that.GetShopKuList()
+                    
+                }else if(_g.GetqueryUrl('type')==3){
+                    //我的商品库 待发货
+                    that.tabsNew=3;                   
+                    that.listQuery.orderState ="04";
+                    that.GetShopKuList()
+                    
+                }else if(_g.GetqueryUrl('type')==4){
+                    //我的商品库 待收货
+                    that.tabsNew=4;                   
+                    that.listQuery.orderState ="05";
+                    that.GetShopKuList()
+                    
+                }else if(_g.GetqueryUrl('type')==5){
+                    //我的商品库 退款中
+                    that.tabsNew=5;                   
+                    that.listQuery.orderState ="06";
+                    that.GetShopKuList()
+                    
+                }else if(_g.GetqueryUrl('type')==8){
+                    shopIndex=1
+                    that.shopTrue = false;
+                    that.liwuTrue = true;
+                    $(".tabBar_right").removeClass("active_right");
+                    $(".tabBar_right").addClass("active_right_fff").siblings().removeClass('active');
+                    $(".tabBar_right").siblings().addClass('active_left')
+                    that.GetliwuShopList()
+                }else {
+                    that.tabsNew=0;                   
+                    that.listQuery.orderState ="01";
+                    that.GetShopKuList()
+                }
+           },
+           
+
+
+        },
+        mounted: function () {
+            this.getUrlType();
+            //返回页面刷新
+            if(window.Hybid!== undefined && window.Hybid!==''){
+                window.Hybid.judgeHasFunction('getShopfunction')
+            }
+        },
+        filters:{
+            fzsAction:function(val){
+                if(val.length>10){
+                    return val.substring(0,10)+"..."
+                }else{
+                    return val
+                }
+            }
+        }
+    })
+    //初始化数据
+    function getShopfunction(){
+        if(shopIndex==0){
+            reloadShopKu()
+        }
+        else{
+            reloadGift()
+        }
+    }
+</script>
+</body>
+</html>

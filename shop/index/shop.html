@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="shop.css">
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak>
+    <!--header-->
+    <header class="clearfix">
+        <img src="../../images/shop_menu@2x.png" alt="menu" class="img-responsive shop_hea_img_left"   @click="toggleMenu()"/>
+        <div class="mui-input-row searchClass"  @click="searchShop">
+            <span class="mui-icon mui-icon-search  spanSearch"></span>
+            <input type="search" readonly="readonly"  placeholder="搜索商品" class="pull-left" style="margin-top:0.4rem">
+        </div>
+
+        <div class="shop_hea_img_right Url_href" href="../shopCar/shopCar.html?isNeedLogin=1">
+            <img src="../../images/shop_caar@2x.png" alt="" class="img-responsive"/>
+            <span class="mui-badge mui-badge-danger">{{countNum}}</span>
+        </div>
+        <div class="shop_header_menu" v-if="header_menu">
+            <ul class="clearfix">
+                <li v-for="item in typeList" :key="item.goodsTypeId"  @click="adver(item)">
+                   {{item.typeName}}
+                </li>
+            </ul>
+        </div>
+    </header>
+    <!--轮播图-->
+ <mt-loadmore :top-method="loadTop" :auto-fill="autos" :top-distance="distant"  :bottom-all-loaded="allLoaded" ref="loadmore" @top-status-change="handleTopChange">
+    <mt-swipe :auto="30000" style="height:8rem" class="shop_banner">
+        <mt-swipe-item v-for="(item,index) in bannerlist" :key="item.id">
+            <img v-if="item.linkType=='01'" :src="item.imgUrl"  alt="" class="img-responsives Url_href" :href="'../shopDetails/shopDetails.html?id='+item.bannerUrl"/>
+            <img v-if="item.linkType=='03'" :src="item.imgUrl"  alt="" class="img-responsives"/>
+            <img v-if="item.linkType=='02'" :src="item.imgUrl"  alt="" class="img-responsives" @click="goToAdv(item.bannerUrl,item.activeName)"/>
+        </mt-swipe-item>
+    </mt-swipe>
+    <!--菜单栏-->
+    <div class="shop_menu">
+        <ul class="clearfix">
+            <li>
+                <img src="../../images/shop_menu_list1@2x.png" alt="" class="img-responsive Url_href" href="../advertising/advertising.html?isRecommend=01"/>
+                <p>热门推荐</p>
+            </li>
+            <li href="www">
+                <img src="../../images/shop_menu_list2@2x.png" alt="" class="img-responsive Url_href" href="../integral/integral.html?isNeedLogin=1"/>
+                <p>积分充值</p>
+            </li>
+            <li>
+                <img src="../../images/shop_menu_list3@2x.png" alt="" class="img-responsive Url_href" href="../spellGroup/spellGroup.html"/>
+                <p>拼团</p>
+            </li>
+            <li>
+                <img src="../../images/shop_menu_list4@2x.png" alt="" class="img-responsive Url_href" href="../shopKu/shopKu.html?isNeedLogin=1"/>
+                <p>我的商品库</p>
+            </li>
+        </ul>
+    </div>
+    <!--two lists-->
+    <div class="shop_two_men">
+        <ul class="clearfix">
+            <li v-for="(item,index) in goodsAdMap" :key="item.id">
+                <img v-if="item.adPositionType=='02'" :src="item.adImageUrl"  alt="" class="img-responsives Url_href"  :href="'../shopDetails/shopDetails.html?id='+item.adPositionUrl"/>
+                <img v-if="item.adPositionType=='03'" :src="item.adImageUrl"  alt="" class="img-responsives Url_href" :href="item.adPositionUrl"/>
+                <img v-if="item.adPositionType=='01'" :src="item.adImageUrl"  alt="" class="img-responsives "  @click="goToAdv(item.adPositionUrl,item.activeName)"/>
+                <img v-if="item.adPositionType=='04'" :src="item.adImageUrl"  alt="" class="img-responsives"/>
+                <img v-if="item.adPositionType=='05'" src="../../images/shopkong4.png"  alt="" class="img-responsives"/>
+            </li>
+        </ul>
+    </div>
+    <!--拼团-->
+    <div class="shop_timego clearfix" v-if="grouplist.length!==0">
+        <li class="mui-table-view-cell">
+            <a class="mui-navigate-right">
+                <span class="pull-right time_go_div_span Url_href" href="../spellGroup/spellGroup.html">更多</span>
+                <div class="clearfix time_go_div">
+                    <img src="../../images/shop_menu_time1@2x.png" alt="" class="img-responsive"/>
+                    <span class="time_go_div_span1">拼团</span>
+                </div>
+            </a>
+        </li>
+    </div>
+    <div class="shop_time_shops" v-if="grouplist.length!==0">
+        <ul class="clearfix">
+            <li v-for="(item,index) in grouplist" class="Url_href" :href="'../shopDetails/shopDetails.html?id='+item.goodsId">
+                <img :src="item.imageShowUrl" alt="" class="img-responsive"/>
+                <p class="fzs-ellipsis-1">{{item.goodsName}}</p>
+                <span>{{item.salePrice | jifen}} <i>积分</i></span>
+            </li>
+        </ul>
+    </div>
+     <!--广告位-->
+     <div class="shop_adver">
+         <img v-if="gdActiveAdMap.adPositionType=='02'" :src="gdActiveAdMap.adImageUrl"  alt="" class="img-responsives Url_href shop_adver_img1" :href="'../shopDetails/shopDetails.html?id='+gdActiveAdMap.adPositionUrl"/>
+         <img v-if="gdActiveAdMap.adPositionType=='03'" :src="gdActiveAdMap.adImageUrl"  alt="" class="img-responsives Url_href shop_adver_img1" :href="gdActiveAdMap.adPositionUrl"/>
+         <img v-if="gdActiveAdMap.adPositionType=='01'" :src="gdActiveAdMap.adImageUrl"  alt="" class="img-responsives  shop_adver_img1" @click="goToAdv(gdActiveAdMap.adPositionUrl,gdActiveAdMap.activeName)"/>
+         <img v-if="gdActiveAdMap.adPositionType=='04'" :src="gdActiveAdMap.adImageUrl"  alt="" class="img-responsives shop_adver_img1"/>
+         <img v-if="gdActiveAdMap.adPositionType=='05'" src="../../images/shopkong2.png"  alt="" class="img-responsives shop_adver_img1"/>
+     </div>
+    <!--中间三个图片-->
+    <div class="shop_thre_shops clearfix">
+        <div class="pull-left thre_lefts " v-for="(item,index) in activeAdMap" v-if="index==0">
+            <img v-if="item.adPositionType=='02'" :src="item.adImageUrl"  alt="" class="img-responsives Url_href" :href="'../shopDetails/shopDetails.html?id='+item.adPositionUrl"/>
+            <img v-if="item.adPositionType=='03'" :src="item.adImageUrl"  alt="" class="img-responsives Url_href" :href="item.adPositionUrl"/>
+            <img v-if="item.adPositionType=='01'" :src="item.adImageUrl"  alt="" class="img-responsives " @click="goToAdv(item.adPositionUrl,item.activeName)"/>
+            <img v-if="item.adPositionType=='04'" :src="item.adImageUrl"  alt="" class="img-responsives"/>
+            <img v-if="item.adPositionType=='05'" src="../../images/shopkong1.png"  alt="" class="img-responsives"/>
+        </div>
+        <div class="pull-right thre_rights" >
+            <div v-for="(item,index) in activeAdMap"  v-if="index==1" style="margin-bottom: 0.3rem">
+                <img v-if="item.adPositionType=='02'" :src="item.adImageUrl"  alt="" class="img-responsives Url_href" :href="'../shopDetails/shopDetails.html?id='+item.adPositionUrl"/>
+                <img v-if="item.adPositionType=='03'" :src="item.adImageUrl"  alt="" class="img-responsives Url_href" :href="item.adPositionUrl"/>
+                <img v-if="item.adPositionType=='01'" :src="item.adImageUrl"  alt="" class="img-responsives " @click="goToAdv(item.adPositionUrl,item.activeName)"/>
+                <img v-if="item.adPositionType=='04'" :src="item.adImageUrl"  alt="" class="img-responsives"/>
+                <img v-if="item.adPositionType=='05'" src="../../images/shopkong3.png"  alt="" class="img-responsives"/>
+            </div>
+            <div v-for="(item,index) in activeAdMap"  v-if="index==2">
+                <img v-if="item.adPositionType=='02'" :src="item.adImageUrl"  alt="" class="img-responsives Url_href" :href="'../shopDetails/shopDetails.html?id='+item.adPositionUrl"/>
+                <img v-if="item.adPositionType=='03'" :src="item.adImageUrl"  alt="" class="img-responsives Url_href" :href="item.adPositionUrl"/>
+                <img v-if="item.adPositionType=='01'" :src="item.adImageUrl"  alt="" class="img-responsives "  @click="goToAdv(item.adPositionUrl,item.activeName)"/>
+                <img v-if="item.adPositionType=='04'" :src="item.adImageUrl"  alt="" class="img-responsives"/>
+                <img v-if="item.adPositionType=='05'" src="../../images/shopkong3.png"  alt="" class="img-responsives"/>
+            </div>
+
+            <!--<img :src="item.adImageUrl" alt="" class="img-responsives Url_href" :href="item.adPositionUrl"/>-->
+        </div>
+    </div>
+
+    <!--推荐-->
+    <div class="shop_recommend">
+        <div class="shop_recommend_title">
+            <div class="clearfix time_go_div">
+                <img src="../../images/shop_menu_gouwu@2x.png" alt="" class="img-responsive"/>
+                <span class="time_go_div_span1">蛙影推荐</span>
+                <span class="pull-right time_go_div_span Url_href" href="../shopList/shopListcheck.html">更多 ></span>
+            </div>
+
+        </div>
+        <div class="shop_recommend_list">
+            <ul class="clearfix" v-infinite-scroll="loadMore"
+                infinite-scroll-disabled="loading"
+                infinite-scroll-distance="10">
+                <li v-for="(item,index) in recommends" :key="item.id" class="Url_href"  :href="'../shopDetails/shopDetails.html?id='+item.id">
+                    <div class="lis_img">
+                        <img v-lazy="item.imageShowUrl" alt="" class="img-responsive"/>
+                        <!--<div class="time" v-if="item.isGroupBuy==01">-->
+                            <!--<span class="fnTimeCountDown time_span" :data-end="item.endTime">距离<span class="day">0</span>天<i class="hour">00</i>:<i class="mini">00</i>:<i class="sec">00</i>结束</span>-->
+                        <!--</div>-->
+                        <div class="pin" v-if="item.isGroupBuy==01">
+                            <span>拼团</span>
+                        </div>
+                    </div>
+                    <p class="fzs-ellipsis-1">{{item.goodsName}}</p>
+                    <span>{{item.salePrice | jifen}}<i>积分</i></span>
+                </li>
+            </ul>
+            <div v-if="loading" style="background: #fff;height: 40px">
+                <mt-spinner type="double-bounce" color="#2196F3"></mt-spinner>
+            </div>
+            <footer v-if="footershow">
+                <p>到底啦~</p>
+            </footer>
+        </div>
+    </div>
+     <div slot="top" class="mint-loadmore-top">
+         <span v-show="topStatus !== 'loading'" :class="{ 'rotate': topStatus === 'drop' }"></span>
+         <span v-show="topStatus === 'loading'"><mt-spinner :type="1" color="#2196F3"></mt-spinner></span>
+     </div>
+    </mt-loadmore>
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm=new Vue({
+        el:'#app',
+        data:{
+            bannerlist:[
+            ],
+            goodsAdMap:[],
+            grouplist:[],
+            activeAdMap:[],
+            footershow:false,
+            startLoaing:false,
+            gdActiveAdMap:{},
+            typeList:[],
+            recommends:[],
+            header_menu:false,
+            time_day:0,
+            loading:false,
+            pageSize:10,
+            pageId:1,
+            cartAccount:0,
+            Timeover:false,
+            allLoaded:false,
+            topStatus:'',
+            distant:70,
+            autos:false,
+            loadajax:false,
+            countNum:0,
+        },
+        methods:{
+            loadTop:function(){    //下拉刷新
+                this.topStatus='loading'
+                var that=this
+                that.pageId=1
+                that.recommends=[]
+                that.footershow=false
+                that.startLoaing=true
+                that.loading = false;
+                setTimeout(function () {
+                    that.ajaxList()
+                    that.shopCar()
+                    that.ajaxListIndex()
+                },1000)
+            },
+            handleTopChange:function(status) {
+                this.topStatus = status;
+            },
+            searchShop: function () {
+                _g.searchShop()
+            },
+            toggleMenu: function () {    //
+              this.header_menu=!this.header_menu
+            },
+            ajaxListIndex: function () {
+                var that=this
+                _g.ajax('/h5/index/view',{},function(res){
+                    if(res.state){
+                        that.bannerlist=res.data.bannerlist
+                        that.goodsAdMap=res.data.goodsAdMap
+                        that.grouplist=res.data.grouplist
+                        that.activeAdMap=res.data.activeAdMap
+                        that.gdActiveAdMap=res.data.gdActiveAdMap
+                        that.typeList=res.data.typeList
+                        that.loading = false;
+                        that.$refs.loadmore.onTopLoaded();
+                    }
+                    else{
+                        that.$toast({
+                            message:res.msg,
+                            position: 'bottom',
+                        })
+                    }
+                })
+            },
+            ajaxList: function () {   //商品推荐列表
+                var that=this
+                _g.ajax('/app/goodsBase/getGoodsList',{
+                    pageSize:that.pageSize,
+                    pageId:that.pageId,
+                    isRecommend:'01'
+                },function(res){
+                    //_g.loginAction()
+                    if(res.state){
+                        if(res.data.isData){
+                            that.recommends=that.recommends.concat(res.data.result)
+//                            that.$nextTick(function(){
+//                                var nowData=new Date(res.data.nowTime)
+//                                $(".fnTimeCountDown").fnTimeCountDown(nowData);
+//                            })
+                            that.pageId++
+                            that.loading = false;
+                            that.startLoaing=true
+                        }
+                       else{
+                            that.footershow=true
+                            that.startLoaing=false
+                            that.loading = false;
+                       }
+                    }
+                    else{
+                        that.loading = false;
+                        that.startLoaing=true
+                        that.$toast({
+                            message:res.msg,
+                            position: 'bottom',
+                        })
+                    }
+                })
+            },
+            loadMore:function() {
+                var that=this
+                if(that.startLoaing){
+                    that.loading = true;
+                    setTimeout(function () {
+                        that.ajaxList()
+                    },800);
+                }
+            },
+            EncodeURI:function(name){    //中文转义
+                return encodeURI(encodeURI(name))
+            },
+            shopCar:function(){   //购物车
+                var that = this;
+                _g.ajax("/h5/index/getCartCount",{},function(res){
+                    if(res.state == true){
+                        that.countNum=res.data
+                    }else{
+                        that.countNum=0
+                    }
+                })
+            },
+            //手机上会出现搜索分类 其中某个分类进去返回之后 菜单分类还在展示
+            adver:function(item){
+                this.header_menu = false;
+                window.location.href='../advertising/advertising.html?id='+item.goodsTypeId
+                //+'&name='+this.EncodeURI(item.typeName)
+                localStorage.setItem("title",item.typeName);
+            },
+            //解决IOSurl传中文出现乱码的问题
+            goToAdv:function(adPositionUrl,activeName){
+
+                window.location.href='../advertising/advertising.html?type='+adPositionUrl
+                localStorage.setItem("title",activeName);
+            }
+        },
+        mounted: function () {
+            this.pageId=1
+            this.ajaxListIndex()
+            this.shopCar()
+            this.ajaxList();
+
+        },
+        filters:{
+            price: function (value) {
+                return parseFloat(value).toFixed(2)
+            },
+            jifen: function (value) {
+                if(parseFloat(value).toFixed(0).toString().length>8){
+                    return (parseInt(value)/10000).toFixed(0)+'万'
+                }
+                return parseFloat(value).toFixed(0)
+            }
+        }
+    })
+    function shopCar(){   //购物车
+        Vm.$data.header_menu = false;
+        _g.ajax("/h5/index/getCartCount",{},function(res){
+            if(res.state == true){
+                Vm.$data.countNum=res.data
+            }else{
+                Vm.$data.countNum=0
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

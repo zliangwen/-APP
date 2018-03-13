@@ -1,0 +1,35 @@
+.h5_wrapper {
+  background: #fff;
+}
+.h5_wrapper .mint-header {
+  background: #2196f3;
+}
+.h5_wrapper .mint-header .mint-header-title {
+  font-weight: normal;
+}
+.h5_wrapper .circle {
+  width: 100vw;
+  box-sizing: border-box;
+  display: flex;
+  display: -webkit-flex;
+  justify-content: center;
+  align-items: center;
+}
+.h5_wrapper .hasData {
+  flex-flow: column wrap;
+  margin-top: 2rem;
+  align-items: flex-start;
+  padding: 1rem .75rem;
+}
+.h5_wrapper .hasData p {
+  font-size: .75rem;
+  color: #666;
+  line-height: 1.375rem;
+}
+.h5_wrapper .hasData .title {
+  color: #666;
+  font-size: .8rem;
+  font-weight: bold;
+  height: 2.5rem;
+  line-height: 2.5rem;
+}

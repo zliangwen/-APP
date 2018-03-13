@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>购物车</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../index/shop.css">
+    <link rel="stylesheet" href="../spellGroup/spellGroup.css">
+    <link rel="stylesheet" href="shopCar.css">
+</head>
+<body>
+<div class="h5_wrapper clearfix" id="app" v-cloak style="overflow: hidden;">
+    <!--header-->
+    <header class="clearfix">
+        <span class="mui-icon mui-icon-back color_fff" v-if="adminAction" @click="goBack"></span>
+        <span class="font_size_85 color_fff margin_center"  v-text="title"></span>
+        <div class="shop_hea_img_right color_fff font_size_7" @click="chooseAdmin" v-if="adminClick">
+            {{admin}}
+        </div>
+        <div class="shop_hea_img_right color_fff font_size_7" v-if="!adminClick">
+            {{admin}}
+        </div>
+    </header>
+    <!--推荐-->
+    <div class="shop_recommend clearfix" style="margin-top:2.3rem;margin-bottom: 2rem">
+        <div class="shop_recommend_list shop_recommend_list_ol shopCar_list clearfix">
+            <!-- <ul class=" "> -->
+            <ul id="OA_task_1" class="mui-table-view  oul clearfix">
+                <li ref="li" class="mui-table-view-cell " v-for="(item,index) in recommends" :data-id="item.cartId" :data-price="item.salePrice" :data-num="item.goodsNum" :data-index="index">
+                    <div class="mui-slider-right mui-disabled">
+                        <a class="mui-btn mui-btn-red">删除</a>
+                    </div>
+                    <div class="mui-slider-handle" style="width:100%;display: flex">
+                        <div class="lis_left">
+                            <i @click="chooseAction(item,index)">
+                                <img src="../../images/choose_Icon.png" v-if="item.checked"/>
+                            </i>
+                        </div>
+                        <div class="lis_img1 Url_href" :href="'../shopDetails/shopDetails.html?id='+item.goodsId">
+                            <img v-lazy="item.imageShowUrl" alt="" class="img-responsive "/>
+                        </div>
+                        <div class="lis_right " >
+                            <div v-text="item.goodsName" class="fzs-ellipsis Url_href" :href="'../shopDetails/shopDetails.html?id='+item.goodsId"></div>
+                            <div class="color_9 font_size_05 margin_top Url_href" :href="'../shopDetails/shopDetails.html?id='+item.goodsId"  v-if="item.specName">{{item.specName}}</div>
+                            <div class="font_size_85_c font_size_85 position_Bottom">{{item.salePrice | jifen}}<em>积分</em></div>
+                            <div class="num">
+                                <span class="pull-left color_span_9" :class="{active:isActive}" @click="numChange(index,item,-1)">-</span>
+                                <div class="input">{{item.goodsNum}}</div> 
+                                <span class="pull-left color_span_3" @click="numChange(index,item,1)">+</span>
+                            </div>
+                        </div>
+                    </div> 
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="allNullClass clearfix" v-if="allNull">
+        <img src="../../images/shopCar.png"/>
+        <p class="color_9" style="text-align: center;">这里空空如也~</p>
+        <button  @click="goBack">去逛逛~</button>
+    </div>
+    <footer class="back flex" v-if="!shopCarNullShow">
+        <div class="footer_choose" style="flex:1">
+            <i @click="chooseAll">
+                <img src="../../images/choose_Icon.png" v-if="allChecked"/>
+            </i>
+            <span>全选</span>
+        </div>
+        <div class="total font_size_65">
+            合计：<span class="font_size_8" style="color:#f13030">{{totalPrice}}<em>积分</em></span>
+        </div>
+        <div class="goOrder color_fff font_size_75" @click="goOrder" v-if="!delectShow">去下单</div>
+        <div class="red color_fff font_size_75" @click="delectBoth" v-if="delectShow">删除</div>
+    </footer>
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm=new Vue({
+        el:'#app',
+        data:{
+            admin:"管理",
+            adminAction:true,
+            title:"购物车",
+            recommends:[],           
+            isActive:false,
+            choose:false,
+            totalPrice:0,
+            delect:false,
+            flog:1,
+            allChecked:false,
+            delectShow:false,
+            delectList:{
+                list:[],
+                totalPrice:null,
+            },
+            data:{
+                cartIds:''
+            },
+            shopCarNull:true,
+            shopCarNullShow:true,
+            allNull:false,
+            adminClick:true,
+        },
+        methods:{
+            goBack:function(){
+                if(_g.GetqueryUrl("isBack")){
+                    _g.goBack()
+                }else{
+                    _g.goIndex()
+                }
+                
+                //window.location.href="../index/shop.html"
+            },
+            //管理&完成
+            chooseAdmin:function(){
+                var that = this;
+                if(that.flog == 1){
+                    that.admin = "完成"
+                    that.flog = 0;
+                    that.adminAction = false;
+                    that.delectShow = true;
+                    that.guanliIndex();
+                    that.delectList.list = [];
+                    
+                }else if(that.flog == 0){
+                     that.admin = "管理"
+                     that.flog = 1;
+                     that.delectShow = false;
+                     that.adminAction = true;
+                     that.guanliIndex();
+                     that.delectList.list = [];
+                }
+            },
+            guanliIndex:function(){
+                var list = this.recommends;
+               for(var i=0;i<list.length;i++){
+                    list[i].checked = false;
+               }
+               this.allChecked = false
+               this.totalPrice=0;
+            },
+            guanliIndexAction:function(){
+                var list = this.recommends;
+               for(var i=0;i<list.length;i++){
+                    if(list[i].checked  == true){
+                        this.allChecked = false
+                    }
+               }
+            },
+            //单选
+            chooseAction:function(item,index){
+                    console.log(index)
+                    var list = this.recommends;
+                        len = list.length;
+                    if ( !list[index]['checked']) {
+                        this.recommends[index]['checked'] = false;
+                        list[index]['checked'] = !list[index]['checked'];
+                        this.delectList.list.push(list[index]);
+                        console.log(this.delectList.list)
+                    } else {
+                        list[index]['checked'] = !list[index]['checked'];  
+                        this.delectList.list.splice(list[index],1) 
+                        console.log(this.delectList.list)                     
+                    }
+                    // // 判断是否选择所有商品的全选
+                    this.isChooseAll();
+                    this.calTotalMoney(index,item);                   
+                    this.delectList.totalPrice = this.totalPrice;
+                    //this.getShopCarList();
+            },
+            // 判断是否选择所有商品的全选
+            isChooseAll : function() {
+                var flag1 = true;
+                for ( var i = 0, len = this.recommends.length; i < len; i++ ) {
+                    if ( this.recommends[i]['checked'] == false ) {
+                        flag1 = false;
+                        break;
+                    }
+                }
+
+                flag1 == true ? this.allChecked = true : this.allChecked = false;
+            },
+            //数量加减
+            numChange : function(index,numChange,intoy) {
+                var goods = this.recommends[index],
+                    oThis = this;
+                if(numChange.isGroupBuy=='01'){
+                    numChange.goodsNum = 1;
+                    var data={
+                        goodsNum:1,
+                        cartId:numChange.cartId
+                    }
+                    _g.ajax("/app/shoppingCart/updateShoppingCartList",data,function(res){
+                        if(res.state == true){
+                            mui.toast('拼团商品只能买一个')
+                        }
+                    })
+
+
+                    return false
+                }
+                if ( intoy == 1 ) { 
+                     var data={
+                        goodsNum:++numChange.goodsNum,
+                        cartId:numChange.cartId
+                     }
+                     //numChange.goodsNum++
+                    _g.ajax("/app/shoppingCart/updateShoppingCartList",data,function(res){
+                         if(res.state == true){
+                            console.log(data)
+                         }
+                    })
+                } else if ( intoy == -1 ) {
+                    if ( numChange.goodsNum<= 1 ) {
+                        numChange.goodsNum = 1;
+                    }else{
+                        var data={
+                            goodsNum:--numChange.goodsNum,
+                            cartId:numChange.cartId
+                         }
+                        _g.ajax("/app/shoppingCart/updateShoppingCartList",data,function(res){
+                            console.log(res)
+                             if(res.state == true){
+                              
+                              }
+                        })
+                    }
+                }
+                this.calTotalMoney(index,goods)
+            },
+            // 计算商品总积分
+            calTotalMoney : function (index,item) {
+                var oThis = this;
+                this.totalPrice = 0;
+                    var list = this.recommends;
+                    list.forEach(function(item, index) {                       
+                        if ( list[index]['checked'] ) {
+                            oThis.totalPrice += parseFloat(item.goodsNum) * parseFloat(item.salePrice);
+                        }
+                    });               
+            },
+        
+            //全选中
+            chooseAll:function(){
+                var flag = true;
+                this.delectList.list=[];
+                if ( this.allChecked ) {
+                    flag = false;
+                    this.delectList.list=[];
+                }else{                   
+                    this.delectList.list=this.delectList.list.concat(this.recommends);
+                }                   
+                for ( var i = 0, len = this.recommends.length; i < len; i++ ) {
+                    this.recommends[i]['checked'] = flag;
+                }
+                this.calTotalMoney();
+                this.delectList.totalPrice = this.totalPrice;
+                this.allChecked = !this.allChecked;
+                console.log(this.delectList.list)
+            },
+          
+            //全部删除
+            delectBoth:function(){
+                var Othis = this;
+                console.log(Othis.delectList.list)
+                var cartIds=""; 
+                //Othis.$messagebox.confirm('确定删除商品?').then(function(action) {
+                    if(Othis.delectList.list.length == 0){
+                       Othis.$messagebox('提示', '请选择删除商品');
+
+                    }else{
+                        for(var i=0;i<Othis.delectList.list.length;i++){                           
+                            cartIds += Othis.delectList.list[i].cartId+","
+
+                        }
+                        var cardId = cartIds.substr(0,cartIds.length-1)
+                        console.log(cartIds)
+                        var data={
+                            cartIds:cardId
+                        }
+                        Othis.$messagebox.confirm("确定删除商品?").then(function(actiom){
+                            console.log(Othis.delectList.list)
+                            _g.ajax("/app/shoppingCart/deleteShoppingCart",data,function(res){
+                                console.log(res)
+                                if(res.state == true){
+                                    //Othis.admin="管理";
+                                    Othis.getShopCarList();
+                                    Othis.calTotalMoney();
+                                    Othis.totalPrice=0;
+                                }
+                            })
+                        }).catch(function(res){
+
+                        })
+                    }
+                
+            },
+            //去下单
+            goOrder:function(){
+                var that = this;
+                var cartIds="";
+                if(that.delectList.list.length == 0){
+                    that.$messagebox("提示","请选择商品")
+                }else{
+                    for(var i=0;i<that.delectList.list.length;i++){
+                         cartIds += that.delectList.list[i].cartId+","
+                    }
+                    var cardId = cartIds.substr(0,cartIds.length-1);
+                    var data={
+                        cartIds:cardId
+                    }
+                    _g.ajax("/app/orderSubmit/settlementPay",data,function(res){
+                        console.log(res)
+                        if(res.state == true){
+                            androidAndIos()
+                            window.location.href="../order/order.html?data="+cardId+"&isBuyNow=02";
+                            //_g.owner.settings(that.delectList)
+                            that.getShopCarList()
+                            that.delectList.list =[];
+                            that.allChecked = false;
+                            that.totalPrice = 0;
+                        }else{
+                            mui.toast(res.msg);
+                            that.getShopCarList()
+                            that.delectList.list =[];
+                            that.allChecked = false;
+                            that.totalPrice = 0;
+                        }
+                    },true)
+                }
+            },
+            //首次获取购物车数据
+            getShopCarList:function(){
+                var that = this;
+                _g.ajax("/app/shoppingCart/viewShoppingCart",{},function(res){
+                    console.log(res)
+                    if(res.state == true){
+                        that.recommends = res.data;
+                        //console.log(that.recommends)
+                        that.shopCarNullShow = false;
+                        that.allNull=false;
+                        that.dele();
+                        that.adminClick=true;
+                    }else{
+                        that.recommends=[];
+                        that.admin="管理"
+                        that.shopCarNull = true;
+                        that.shopCarNullShow = true;
+                        that.allNull=true;
+                        that.adminAction = true;
+                        that.adminClick=false;
+                    }
+                },true)
+            },
+
+            //左滑删除
+            dele:function(){
+                var that = this;
+                //that.getShopCarList()
+                (function($) {
+                    $('#OA_task_1').on('tap', '.mui-btn', function(event) {
+                        var elem = this;
+                        var li = elem.parentNode.parentNode;
+                        var id = li.getAttribute("data-id");
+                        var price = li.getAttribute("data-price");
+                        var num = li.getAttribute("data-num")
+                        var index = li.getAttribute("data-index")
+                        console.log(index)
+                        var data={
+                           cartIds:id,
+                        }
+                        that.$messagebox.confirm('确认删除该件商品？').then(function(){
+                             _g.ajax("/app/shoppingCart/deleteShoppingCart",data,function(res){   
+                                if(res.state == true){
+                                       // li.parentNode.removeChild(li);
+                                        that.recommends.splice(index, 1)
+                                        mui.swipeoutClose(li);
+                                        that.$toast({
+                                            message:"删除成功",
+                                            position:"bottom"
+                                        })
+                                        that.calTotalMoney();
+                                        
+                                        var length = event.path[3].childNodes.length
+                                        if(length == 0){
+                                            that.getShopCarList()
+                                        }
+                                    }
+                                })
+                        }).catch(function(){
+                            mui.swipeoutClose(li);
+                        })
+                    });
+                    
+                })(mui)
+            }
+        },
+        mounted: function () {           
+            this.getShopCarList();
+            console.log(window.Hybid)
+        },
+        filters:{
+            price: function (value) {
+                return parseFloat(value).toFixed(2)
+            },
+            jifen: function (value) {
+                return parseFloat(value).toFixed(0)
+            }
+        }
+
+    })
+   
+</script>
+</body>
+</html>

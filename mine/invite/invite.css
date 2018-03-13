@@ -1,0 +1,83 @@
+.content {
+  background: url("../../images/invite@2x.png") #2196f3 no-repeat;
+  position: relative;
+  background-size: 100%;
+}
+.content .line {
+  position: absolute;
+  left: 3.5rem;
+  font-size: 1.05rem;
+}
+.content .line1 {
+  top: 11.5rem;
+}
+.content .line2 {
+  top: 13rem;
+  text-indent: 2em;
+}
+.content .line3 {
+  top: 19rem;
+  color: #fff;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: .95rem;
+}
+.content .line4 {
+  top: 20rem;
+  font-size: 1.45rem;
+  font-weight: bold;
+}
+.content .line5 {
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14rem;
+  background: #ffd800;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  text-align: center;
+  border-radius: .2rem;
+  font-size: 1rem;
+}
+.contentfriend {
+  background: url("../../images/invitefriend.png") #2196f3 no-repeat;
+  position: relative;
+  background-size: 100%;
+}
+.contentfriend .line {
+  position: absolute;
+  left: 3.5rem;
+  font-size: 1.05rem;
+}
+.contentfriend .line1 {
+  top: 11.5rem;
+}
+.contentfriend .line2 {
+  top: 13rem;
+  text-indent: 2em;
+}
+.contentfriend .line3 {
+  top: 17rem;
+  color: #fff;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: .95rem;
+}
+.contentfriend .line4 {
+  top: 18rem;
+  font-size: 1.45rem;
+  font-weight: bold;
+}
+.contentfriend .line5 {
+  bottom: 6.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 14rem;
+  background: #ffd800;
+  height: 2.5rem;
+  line-height: 2.5rem;
+  text-align: center;
+  border-radius: .2rem;
+  font-size: 1rem;
+}
+

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>关于我们</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="aboutus.css">
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak style="height: 100%">
+    <mt-header title="关于我们" fixed>
+        <span slot="left">
+            <mt-button icon="back" @click="goback"></mt-button>
+        </span>
+    </mt-header>
+    <div class="circle hasData">
+        <p v-html="articleContent"></p>
+    </div>
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm = new Vue({
+        el: '#app',
+        data: {
+            articleName:'',
+            articleContent:''
+        },
+        methods: {
+            ajaxList:function(){
+                var that=this;
+                _g.ajax('/app/sys/aboutUs',{
+                },function(res){
+                    if(res.state){
+                        that.articleName=res.data.dataList[0].articleName
+                        that.articleContent=res.data.dataList[0].articleContent
+                    }
+                    else{
+                        that.$toast({
+                            message:res.msg,
+                            position: 'bottom',
+                        })
+                    }
+                })
+            },
+            goback: function () {
+                _g.goBack()
+            }
+        },
+        mounted: function () {
+            this.ajaxList()
+        }
+    })
+</script>
+</body>
+</html>

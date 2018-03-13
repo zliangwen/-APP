@@ -1,0 +1,78 @@
+html{
+    height:100%;
+    background:#f0f0f0;
+}
+.shop_recommend .shopCar_list1{
+    padding:0 .75rem;
+}
+.shop_recommend .shopCar_list1 ul li{
+    height:6rem;
+    border-bottom:1px solid #e0e0e0;
+    width:100%;
+    display:flex;
+}
+.shop_recommend_list_ol ul li:nth-child(2n+1){
+    padding:0;
+}
+.shop_recommend_list_ol ul li:nth-child(2n){
+    padding:0;
+}
+.shop_recommend .shopCar_list1 ul li .imgList{
+    flex:0.8;
+    position:relative;
+}
+.shop_recommend .shopCar_list1 ul li .imgList img{
+    width:4rem;
+    height:4rem;
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    margin:auto;
+    border:0;
+}
+
+.shop_recommend .shopCar_list1 ul li .list_name{
+    flex:2;
+    position:relative;
+    padding:0.75rem 0 0 0.5rem;
+}
+
+em{
+    font-size: 0.55rem;
+    font-style: normal;
+    padding-left:.1rem;
+    font-weight: 600;
+}
+.shop_recommend .shopCar_list1 ul li .list_name .list_price{
+    position:absolute;
+    bottom: 0.75rem;
+    left:0.5rem;
+}
+.shop_recommend .shopCar_list1 ul li .list_name .num{
+     position:absolute;
+    bottom: 0.75rem;
+    right:0.5rem;
+}
+.length{
+    width:100%;
+    height:5rem;
+    text-align: right;
+    line-height: 2.7rem;
+    color:#333;
+
+}
+footer{
+    width:100%;
+    height:2.5rem;
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    background:#fff;
+}
+footer div{
+    flex:2;
+    line-height: 2.5rem;
+    text-align: center;
+}

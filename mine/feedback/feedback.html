@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>意见反馈</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="feedback.css">
+    <style>
+        input{
+            border:none
+        }
+    </style>
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak style="height: 100%">
+    <mt-header title="意见反馈" fixed>
+        <span slot="left">
+            <mt-button icon="back" @click="goback"></mt-button>
+        </span>
+    </mt-header>
+    <div class="circle hasData">
+        <!--<div class="fRow">-->
+            <!--<mt-field label="联系电话" placeholder="请输入您的联系电话" type="number" v-model="phone"></mt-field>-->
+        <!--</div>-->
+        <div class="fRow" style="height:7.125rem;margin-bottom: 2rem">
+            <mt-field placeholder="请输入您的意见和建议..." type="textarea" rows="4" v-model="suggestion"></mt-field>
+        </div>
+        <div class="subBtn" @click="sumitSure">提交</div>
+        <div class="note">客服热线：<span><a href="tel:400400000"></a>400-000-0000</span></div>
+    </div>
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm = new Vue({
+        el: '#app',
+        data: {
+            phone:'',
+            suggestion:'',
+            onoff:false
+        },
+        methods: {
+            sumitSure:function(){
+                var that=this;
+                if(that.onoff){
+                    return false
+                }
+                that.onoff=true
+                _g.ajax('/app/sys/feedback', {
+                    feedbackContent: that.suggestion
+                }, function (res) {
+                    if (res.state) {
+                        that.$toast({
+                            message: res.msg,
+                            position: 'bottom',
+                        })
+                        setTimeout(function () {
+                            that.goback()
+                        }, 1000)
+                    }
+                    else {
+                        that.onoff=false
+                        that.$toast({
+                            message: res.msg,
+                            position: 'bottom',
+                        })
+                    }
+                },true)
+            },
+            goback: function () {
+                _g.goBack()
+            }
+        },
+        mounted: function () {
+
+        }
+    })
+</script>
+</body>
+</html>

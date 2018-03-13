@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>专题区</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="../index/shop.css">
+    <link rel="stylesheet" href="../spellGroup/spellGroup.css">
+    <link rel="stylesheet" href="advertising.css">
+    <style>
+        .shop_recommend_list ul li .lis_img img[lazy=loading] {
+            width: 40px !important;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak>
+    <!--header-->
+    <header class="clearfix">
+        <span class="mui-icon mui-icon-back color_fff" @click="goBack"></span>
+        <span class="font_size_85 color_fff margin_center"  v-text="title"></span>
+        <div class="shop_hea_img_right Url_href" href="../shopCar/shopCar.html?isNeedLogin=1">
+            <img src="../../images/shop_caar@2x.png" alt="" class="img-responsive"/>
+            <span class="mui-badge mui-badge-danger">{{countNum}}</span>
+        </div>
+    
+    </header>
+    <div class="tab" style="top:0;position: fixed; z-index: 100;border-bottom: 1px solid #ddd" v-if="searchNullClass">
+        <div class="pull-left" v-for="(item,index) in tabs" @click="changeTab(index)"  :key="item.id"  :class="{active:tab==index}">
+            <span style="padding-right:1rem">{{item.name}}</span>
+            <span class="triangle" style="margin-left:0.2rem" :class="{active_triangle:tab==index}"></span>
+        </div>
+        <span style="position: absolute;bottom: -5rem;left:0;display: block;width: 100%;background:#fff;" class="font_size_7 " v-if="down">
+            <div style="width:50%;height:1.75rem;line-height: 1.75rem;text-align: left;padding-left:3%" @click="gaoTodiAction(item,index)" v-for="(item,index) in priceList">{{item.name}}</div>
+           
+        </span>
+           
+    </div>
+    <!--推荐-->
+    <div class="shop_recommend" style="margin-top:4rem">
+        <div class="shop_recommend_list shop_recommend_list_ol">
+            <ul class="clearfix" v-infinite-scroll="loadMore"
+                infinite-scroll-disabled="loading"
+                infinite-scroll-distance="10">
+                <li v-for="(item,index) in recommends" :key="item.id" class="Url_href" :href="'../shopDetails/shopDetails.html?id='+item.id" style="position: relative;">
+                    <div class="lis_img">
+                        <img v-lazy="item.imageShowUrl" alt="" class="img-responsive"/>
+                    </div>
+                    <div class="pin" v-if="item.isGroupBuy==01">
+                            <span>拼团</span>
+                        </div>
+                    <p class="fzs-ellipsis-2" style="padding:0 0.5rem">{{item.goodsName}}</p>
+                    <span style="padding:0 0.5rem">{{item.salePrice | jifen}}<i style="font-weight: 500">积分</i></span>
+                </li>
+            </ul>
+            <div v-if="loading" style="background: #fff">
+                <mt-spinner type="double-bounce" color="#2196F3"></mt-spinner>
+            </div>
+            <footer v-if="falseTrue" style="margin-top:0rem">
+                <p>没有更多数据~</p>
+            </footer>
+        </div>
+    </div>
+
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm=new Vue({
+        el:'#app',
+        data:{
+            title:"专题区",
+            recommends:[],
+            header_menu:false,
+            time_day:0,
+            loading:false,
+            listQuery:{
+                pageSize:6,
+                pageId:1,
+            },
+            falseTrue:false,
+            stopLoading:false,
+            countNum:null,
+             searchNullClass:true,
+             tabs:[
+                {name:'综合排序',id:1,active:true},
+                {name:'按销量排序',id:2,active:false}
+            ],
+            tab:0,
+            priceList:[
+                {name:"综合排序",id:"01"},
+                {name:"价格由高到低",id:"02"},
+                {name:"价格由低到高",id:"03"},
+            ],
+            down:false,
+            openList:false,
+        },
+        created: function () {
+
+        },
+        methods:{
+            goBack: function () {
+              _g.goBack();
+            },
+            changeTab: function (index) {
+                this.tab=index
+                //this.recommends=[];
+                this.falseTrue = false;
+                if(index ==0){
+                    this.down = true
+                }else{
+                    if(this.openList){
+                        this.recommends=[];
+                        this.down = false
+                        this.listQuery.sortType = 3;
+                        this.listQuery.pageId=1;
+                        this.openList= false;
+                        this.getUrlType();
+                    }
+                    
+                    
+                }
+            },
+            //排序
+            gaoTodiAction:function(item,index){
+                var that = this;
+                //that.recommends=[];
+                console.log(item)
+                that.down = false
+                that.falseTrue = false;
+                that.tabs[0].name = item.name
+                that.recommends=[];
+                if(index == 0){
+                    that.listQuery.pageId=1;
+                    that.listQuery.sortType=4;
+                    that.getUrlType();
+                }else if(index == 1){
+                    that.listQuery.pageId=1;
+                    that.listQuery.sortType=1;
+                    that.getUrlType();
+                }else{
+                    that.listQuery.pageId=1;
+                    that.listQuery.sortType=2;
+                    that.getUrlType();
+                }
+                
+
+            },
+            
+            loadMore:function() {
+                var that=this                
+                if(that.stopLoading){
+                    that.loading = true;
+                    setTimeout(function () {
+                        that.getUrlType();
+                    },3000);
+                }
+                console.log(that.listQuery);                
+                
+            },
+            getUrlType:function(){
+                var that = this;
+                _g.ajax("/app/goodsBase/getGoodsList",that.listQuery,function(res){
+                    console.log(res)
+                    if(res.state == true){
+                        if(res.data.isData == true){
+                            that.listQuery.pageId++;
+                            that.recommends= that.recommends.concat(res.data.result);
+                            that.loading = false;
+                            that.stopLoading =true;
+                            that.openList = true;
+
+                        }else{
+                             that.loading = false;
+                             that.falseTrue=true;
+                             that.stopLoading =false;
+                             
+                        }
+                    }
+                   })
+
+            },
+            GetUrl:function(){
+                var that = this;
+                if(_g.GetqueryUrl("type")){
+                    that.listQuery.specialPageId = _g.GetqueryUrl("type")
+                    that.title = localStorage.getItem("title") 
+                    that.getUrlType()                
+                }else if(_g.GetqueryUrl("id")){
+                    that.listQuery.typeId = _g.GetqueryUrl("id");
+                    that.title = localStorage.getItem("title") 
+                    that.getUrlType()
+                }else if(_g.GetqueryUrl("isRecommend")){
+                    that.listQuery.isRecommend=_g.GetqueryUrl("isRecommend")
+                    that.title="热门推荐";
+                    that.getUrlType()
+                };
+                 
+            },
+           
+
+        },
+
+        mounted: function () {
+            var that =this;
+            //that.title = _g.GetqueryUrl("name")
+            this.GetUrl();
+            _g.getShopCarCount();
+           
+        },
+        filters:{
+            price: function (value) {
+                return parseFloat(value).toFixed(2)
+            },
+            jifen: function (value) {
+                return parseFloat(value).toFixed(0)
+            }
+        }
+    })
+</script>
+</body>
+</html>

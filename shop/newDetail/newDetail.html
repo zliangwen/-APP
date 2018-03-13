@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <style>
+        .h5_wrapper{font-size: 0.8rem;background: #ffffff;color: #333333}
+        h1,h2,h3,h4,h5{font-size: 0.8rem;color: #333333}
+        .h5_wrapper p{font-size: 0.8rem;text-indent: 2em;line-height: 1.5;color: #333333}
+        .h5_wrapper img[data-w-e]{display: inline-block; max-width: 100%; height: auto;width: auto;margin:0}
+        .h5_wrapper img{display:block; width: 100%; height: auto;margin:15px auto}
+        .h5_wrapper table{
+            width: 100%;
+            table-layout:fixed;/* 只有定义了表格的布局算法为fixed，下面td的定义才能起作用。 */
+        }
+        .h5_wrapper table tr td,.h5_wrapper table tr th{
+            border:1px solid #ccc;
+            text-align: center;
+            padding:6px 0;
+            color: #333333
+        }
+
+    </style>
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak style="padding:2% 0;">
+    <div v-html="informationContent">
+
+    </div>
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.min.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script>
+    var Vm=new Vue({
+        el:'#app',
+        data:{
+            informationId:null,
+            informationContent:''
+        },
+        created: function () {
+
+        },
+        methods:{
+            ajaxList: function () {
+                var that=this;
+                _g.ajax('/app/informationH5/details',{
+                    informationId:that.informationId
+                },function(res){
+                    if(res.state){
+                       that.informationContent=res.data.informationContent
+                    }
+                })
+            }
+        },
+        mounted: function () {
+            var that=this;
+            var ids=_g.GetqueryUrl('id')
+            that.informationId=ids
+            that.ajaxList()
+        },
+    })
+</script>
+</body>
+</html>

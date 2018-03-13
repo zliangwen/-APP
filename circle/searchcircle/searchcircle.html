@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>搜索圈子</title>
+    <meta name="viewport"
+          content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="searchcircle.css">
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak style="height: 100%">
+    <div class="circle" v-if="circleId==1" style="height:100vh;">
+        <span class="color_9">精选推荐还没有数据^-^</span>
+    </div>
+    <div class="circle hasData" v-else>
+        <div class="unit" v-for="(item,index) in items" v-infinite-scroll="loadMore"
+             infinite-scroll-disabled="loading"
+             infinite-scroll-distance="10">
+            <div class="left">
+                <div class="photo"><img :src="item.photo" alt="" class="img-responsive"></div>
+                <div class="txt">
+                    <div class="title">{{item.title}}</div>
+                    <div class="note color_9"><span style="margin-right: .61rem">成员{{item.people}}人</span><span>话题{{item.post}}万</span>
+                    </div>
+                </div>
+            </div>
+            <div class="right">
+                <div class="focus" v-if="item.btnId==1">
+                    <mt-button size="small">已关注</mt-button>
+                </div>
+                <div class="focus unfocus" v-else>
+                    <mt-button size="small" @click="follow(index)">+关注</mt-button>
+                </div>
+            </div>
+        </div>
+        <div v-if="loading" style="background: #fff;">
+            <mt-spinner type="double-bounce"></mt-spinner>
+        </div>
+    </div>
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm = new Vue({
+        el: '#app',
+        data: {
+            circleId: 0,
+            loading:false,
+            items:[
+                {
+                    photo:'../../images/circle1@2x.png',
+                    title:'电影《无问西东》',
+                    people:2135,
+                    post:12.6,
+                    btnId:0
+                },
+                {
+                    photo:'../../images/circle1@2x.png',
+                    title:'电影《无问西东》',
+                    people:2135,
+                    post:12.6,
+                    btnId:1
+                },
+                {
+                    photo:'../../images/circle1@2x.png',
+                    title:'电影《无问西东》',
+                    people:2135,
+                    post:12.6,
+                    btnId:0
+                },
+                {
+                    photo:'../../images/circle1@2x.png',
+                    title:'电影《无问西东》',
+                    people:2135,
+                    post:12.6,
+                    btnId:1
+                },
+                {
+                    photo:'../../images/circle1@2x.png',
+                    title:'电影《无问西东》',
+                    people:2135,
+                    post:12.6,
+                    btnId:0
+                },
+                {
+                    photo:'../../images/circle1@2x.png',
+                    title:'电影《无问西东》',
+                    people:2135,
+                    post:12.6,
+                    btnId:1
+                },
+                {
+                    photo:'../../images/circle1@2x.png',
+                    title:'电影《无问西东》',
+                    people:2135,
+                    post:12.6,
+                    btnId:0
+                },
+                {
+                    photo:'../../images/circle1@2x.png',
+                    title:'电影《无问西东》',
+                    people:2135,
+                    post:12.6,
+                    btnId:1
+                },
+
+            ]
+        },
+        methods: {
+            follow(index){
+                this.items[index].btnId==1?this.items[index].btnId=0:this.items[index].btnId=1
+            },
+            loadMore() {
+                var that=this
+                that.loading = true;
+                var item={
+                    photo:'../../images/circle1@2x.png',
+                    title:'电影《无问西东》',
+                    people:2135,
+                    post:12.6,
+                    btnId:1
+                }
+                if(that.items.length==10){
+                    that.loading = false;
+                    return
+                }
+                setTimeout(function () {
+                    that.items.push(item)
+                    that.loading = false;
+
+                },2000);
+            },
+
+        },
+        mounted: function () {
+        }
+    })
+</script>
+</body>
+</html>

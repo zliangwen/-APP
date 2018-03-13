@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>积分充值</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+    <meta name="apple-mobile-web-app-capable" content="yes"/>
+    <meta name = "format-detection" content = "telephone=no">
+    <script src="../../js/flex_rem.js"></script>
+    <link rel="stylesheet" href="../../css/mui.min.css">
+    <link rel="stylesheet" href="../../css/mint.css">
+    <link rel="stylesheet" href="../../css/reset.css">
+    <link rel="stylesheet" href="integral.css">
+</head>
+<body>
+<div class="h5_wrapper" id="app" v-cloak style="height: 100%">
+    <!--头部-->
+    <mt-header title="充值" fixed>
+        <span  slot="left">
+            <mt-button icon="back" @click="goback()"></mt-button>
+        </span>
+    </mt-header>
+    <div class="integral">
+        <div class="integral_top">
+            <p>我的积分</p>
+            <span>{{userIntegral}}</span>
+        </div>
+        <div class="integral_center">
+            <p>选择充值金额</p>
+            <ul class="clearfix">
+                <li v-for="(item,index) in lists" :key="item.id" @click="changeMoney(index)" :class="{active:tabs==index}">
+                    <span v-if="index==5">{{item.money}}</span>
+                    <span v-else>{{item.money}}元</span>
+                </li>
+            </ul>
+            <input style="font-size: 14px"  type="number" class="mui-input-clear" pattern="[0-9]*" v-model="nums" v-show="Othermoney" placeholder="请输入整数金额" onkeyup="funinput(this)" onafterpaste="funinput(this)">
+        </div>
+    </div>
+    <div class="user_Agree clearfix">
+        <div class="pull-left" @click="changeRadio">
+            <img src="../../images/checked.png" alt="" class="img-responsive" v-if="checked"/>
+            <img src="../../images/check.png" alt="" class="img-responsive" v-else/>
+        </div>
+        <label>我已同意</label><a class="Url_href" href="../../mine/UserAgreement/UserAgreement.html">《用户协议》</a>
+    </div>
+    <footer class="clearfix">
+        <div class="pull-left footer_left_div">
+            <p class="fzs-ellipsis">可获得：<span>{{num_integral}}积分</span></p>
+        </div>
+        <div class="pull-right footer_right_div" @click="Paysure()" :class="{active:checked}">
+            <span>确认充值</span>
+        </div>
+    </footer>
+</div>
+<script src="../../js/jquery.min.js"></script>
+<script src="../../js/mui.min.js"></script>
+<script src="../../js/vue.js"></script>
+<script src="../../js/mint.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/app.js"></script>
+<script>
+    var Vm=new Vue({
+        el:'#app',
+        data:{
+            lists:[
+                {id:0,money:10,active:true},{id:1,money:50,active:false},{id:2,money:100,active:false},{id:3,money:200,active:false},{id:4,money:500,active:false},{id:4,money:'其他金额',active:false}
+            ],
+            tabs:0,
+            value:[],
+            checked:true,
+            nums:10,
+            Othermoney:false,
+            multiplying:20,
+            userIntegral:0,
+        },
+        created: function () {
+
+        },
+        computed:{
+            num_integral: function () {   //计算金钱
+                return this.nums*this.multiplying
+            }
+        },
+        methods:{
+            goback: function () {
+                _g.goBack()
+            },
+            changeRadio: function () {   //是否同意协议
+                this.checked=!this.checked
+            },
+            changeMoney: function (index) {  //tab  change
+                this.tabs = index
+                if(index!=5){
+                    this.Othermoney=false
+                    this.nums =this.lists[index].money
+                }
+                else{
+                    this.nums=''
+                    this.Othermoney=true
+                }
+            },
+            Paysure: function () {   //确认充值
+                var that=this;
+                _g.ajax('/app/user/myIntegralAndProportion',{
+                },function(res){
+                    if(res.state){
+                        if(that.checked){
+                            if(that.nums=='' || that.nums==0){
+                                that.$toast({  //调用toast
+                                    message:'最少充值1元',
+                                    position:'bottom', //位置
+                                })
+                                return false
+                            }
+                            window.location.href='./intnext.html?&moneyNumber='+that.nums
+                        }
+                        else{
+                            that.$toast({  //调用toast
+                                message:'请先勾选用户协议',
+                                position:'bottom', //位置
+                            })
+                        }
+                    }
+                    else{
+                        that.$toast({
+                            message:res.msg,
+                            position: 'bottom',
+                        })
+                    }
+                },true)
+
+            },
+            ajaxList:function(){
+                var that=this;
+                _g.ajax('/app/user/myIntegralAndProportion',{
+                },function(res){
+                    if(res.state){
+                        that.userIntegral=res.data.dataList[0].userIntegral
+                        that.multiplying=res.data.dataList[0].proportion
+                    }
+                    else{
+                        that.$toast({
+                            message:res.msg,
+                            position: 'bottom',
+                        })
+                    }
+                },true)
+            },
+        },
+        mounted: function () {
+            this.ajaxList()
+        },
+        filters:{
+
+        }
+    })
+    function funinput(obj){
+        var value = obj.value;
+        obj.value = "";
+        obj.value = value.replace(/[^\d]{6}/g,""); //清除"数字"和"."以外的字符
+        obj.value = value.replace(/^\./g,""); //验证第一个字符是数字
+        obj.value = value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+        if(value.length>=6){
+            Vm.$data.nums = value.substr(0,6)
+        }
+        if(value.indexOf(".")>0){
+            Vm.$data.nums =Vm.$data.nums.replace('.','')
+        }
+        if(value.indexOf(".")< 0 && value !=""){
+            obj.value= parseFloat(value)
+        }
+    }
+</script>
+</body>
+</html>
